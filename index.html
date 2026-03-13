@@ -420,25 +420,22 @@ async function loadAll(){
 // 밑작업명 → 관련 메인품목 자동 해석
 // 우선순위: 1) DB 매핑 2) 키워드 매칭 3) 공통
 function autoResolveRelated(subTaskName){
-  // 1) DB에 매핑 있으면 사용
-  if(subTaskMap[subTaskName] && subTaskMap[subTaskName]!=='공통') return subTaskMap[subTaskName];
-  if(subTaskMap[subTaskName]==='공통') return '공통';
-  // 2) 키워드 자동매칭 — 밑작업명이나 메인작업명에서 규격 추출
+  // 1) DB에 매핑 있으면 사용 (공통/제외/특정품목)
+  if(subTaskMap[subTaskName]) return subTaskMap[subTaskName];
+  // 2) 키워드 자동매칭
   const name=subTaskName.toUpperCase();
   const matched=[];
   mainTasks.forEach(mt=>{
     const mtUp=mt.toUpperCase();
-    // 브랜드+규격 매칭: "OPTIMUM 1717 프레임" 밑작업 → "OPTIMUM 1717" 포함 메인작업
     if(name.includes('1717') && mtUp.includes('1717')) matched.push(mt);
     else if(name.includes('1417') && mtUp.includes('1417')) matched.push(mt);
-    // 브랜드 매칭
     else if(name.includes('OPTIMUM') && mtUp.includes('OPTIMUM')) matched.push(mt);
     else if(name.includes('PRUDENT') && mtUp.includes('PRUDENT')) matched.push(mt);
     else if(name.includes('PIXX') && mtUp.includes('PIXX')) matched.push(mt);
   });
   if(matched.length) return matched.join(',');
-  // 3) 기본값
-  return '공통';
+  // 3) 매칭 안 되면 제외
+  return '제외';
 }
 
 function populateWorkerSelects(){
@@ -751,7 +748,7 @@ function renderCapa(){
       if(r.worker!==s.worker) return;
       if(r.type==='메인작업'&&r.taskName===s.taskName) relatedDates.add(r.date);
       if(r.type==='밑작업'&&isRelatedTo(r.relatedMain,s.taskName)) relatedDates.add(r.date);
-      if(r.type==='밑작업'&&r.relatedMain==='공통') relatedDates.add(r.date);
+      // 공통·제외는 워킹데이에 포함 안 함
     });
     const days=relatedDates.size;
     const avg=days>0?s.total/days:0;
@@ -774,7 +771,7 @@ function renderLeadTime(){
       if(r.worker!==s.worker) return;
       if(r.type==='메인작업'&&r.taskName===s.taskName) relatedDates.add(r.date);
       if(r.type==='밑작업'&&isRelatedTo(r.relatedMain,s.taskName)) relatedDates.add(r.date);
-      if(r.type==='밑작업'&&r.relatedMain==='공통') relatedDates.add(r.date);
+      // 공통·제외는 워킹데이에 포함 안 함
     });
     const days=relatedDates.size;
     const avg=days>0?s.total/days:0;
