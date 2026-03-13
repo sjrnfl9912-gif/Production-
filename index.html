@@ -394,6 +394,8 @@ function isWithin7Days(dateStr){const d=new Date(dateStr+'T00:00:00'),now=new Da
 function todayStr(){return new Date().toISOString().split('T')[0]}
 
 // ═══════════ DATA LOADING ═══════════
+let subTaskMap={}; // 밑작업명 → 관련 메인품목 매핑
+
 async function loadAll(){
   const [rr,ww,mt,st,ac]=await Promise.all([
     sb.from('production_records').select('*').order('date',{ascending:false}),
@@ -405,10 +407,38 @@ async function loadAll(){
   if(rr.data) records=rr.data.map(r=>({id:r.id,date:r.date,worker:r.worker,type:r.type,taskName:r.task_name,quantity:r.quantity,note:r.note||'',relatedMain:r.related_main_task||'',created_at:r.created_at}));
   if(ww.data) workers=ww.data.map(w=>w.name);
   if(mt.data) mainTasks=mt.data.map(t=>t.name);
-  if(st.data) subTasks=st.data.map(t=>t.name);
+  if(st.data){
+    subTasks=st.data.map(t=>t.name);
+    subTaskMap={};
+    st.data.forEach(t=>{subTaskMap[t.name]=t.related_main_tasks||'공통'});
+  }
   if(ac.data) adminPin=ac.data.value;
   populateWorkerSelects();
   buildDatalist();
+}
+
+// 밑작업명 → 관련 메인품목 자동 해석
+// 우선순위: 1) DB 매핑 2) 키워드 매칭 3) 공통
+function autoResolveRelated(subTaskName){
+  // 1) DB에 매핑 있으면 사용
+  if(subTaskMap[subTaskName] && subTaskMap[subTaskName]!=='공통') return subTaskMap[subTaskName];
+  if(subTaskMap[subTaskName]==='공통') return '공통';
+  // 2) 키워드 자동매칭 — 밑작업명이나 메인작업명에서 규격 추출
+  const name=subTaskName.toUpperCase();
+  const matched=[];
+  mainTasks.forEach(mt=>{
+    const mtUp=mt.toUpperCase();
+    // 브랜드+규격 매칭: "OPTIMUM 1717 프레임" 밑작업 → "OPTIMUM 1717" 포함 메인작업
+    if(name.includes('1717') && mtUp.includes('1717')) matched.push(mt);
+    else if(name.includes('1417') && mtUp.includes('1417')) matched.push(mt);
+    // 브랜드 매칭
+    else if(name.includes('OPTIMUM') && mtUp.includes('OPTIMUM')) matched.push(mt);
+    else if(name.includes('PRUDENT') && mtUp.includes('PRUDENT')) matched.push(mt);
+    else if(name.includes('PIXX') && mtUp.includes('PIXX')) matched.push(mt);
+  });
+  if(matched.length) return matched.join(',');
+  // 3) 기본값
+  return '공통';
 }
 
 function populateWorkerSelects(){
@@ -488,22 +518,22 @@ function buildTaskNameCell(id,type,value){
   const ph=type==='밑작업'?'선택 또는 직접입력':'기타 내용 입력';
   return `<input type="text" list="sub-task-list" placeholder="${ph}" value="${value}" onchange="updateRow(${id},'taskName',this.value)" required style="font-size:13px">`;
 }
-function buildRelatedMainCell(id,type,value){
+function buildRelatedInfo(type,taskName){
   if(type!=='밑작업') return '';
-  let o='<option value="공통" '+(value==='공통'||!value?'selected':'')+'>공통 (전체)</option>';
-  mainTasks.forEach(t=>{o+=`<option value="${t}" ${value===t?'selected':''}>${t}</option>`});
-  return `<select onchange="updateRow(${id},'relatedMain',this.value)" style="width:100%;padding:6px 10px;border:1px solid #fde68a;border-radius:var(--rs);font-family:inherit;font-size:12px;background:#fffbeb;color:#92400e">${o}</select>`;
+  const resolved=autoResolveRelated(taskName);
+  if(!taskName) return '';
+  const label=resolved==='공통'?'공통 (전체)':resolved.split(',').length>3?resolved.split(',').slice(0,2).join(', ')+' 외 '+(resolved.split(',').length-2)+'개':resolved;
+  return `<div style="margin-top:4px;font-size:10px;padding:4px 8px;background:#fffbeb;border:1px solid #fde68a;border-radius:4px;color:#92400e">▸ ${label}</div>`;
 }
 function renderRows(){
   const tbody=document.getElementById('taskTableBody'),rows=JSON.parse(tbody.dataset.rows||'[]');
   tbody.innerHTML=rows.map(r=>{
-    const relCell=buildRelatedMainCell(r.id,r.type,r.relatedMain);
     return `<tr>
     <td><select class="type-select ${getTypeClass(r.type)}" onchange="changeType(${r.id},this.value)">
       <option value="메인작업" ${r.type==='메인작업'?'selected':''}>메인작업</option>
       <option value="밑작업" ${r.type==='밑작업'?'selected':''}>밑작업</option>
       <option value="기타" ${r.type==='기타'?'selected':''}>기타</option></select></td>
-    <td>${buildTaskNameCell(r.id,r.type,r.taskName)}${relCell?'<div style="margin-top:4px"><span style="font-size:10px;color:#92400e;font-weight:600">▸ 관련 메인품목</span>'+relCell+'</div>':''}</td>
+    <td>${buildTaskNameCell(r.id,r.type,r.taskName)}${buildRelatedInfo(r.type,r.taskName)}</td>
     <td><input type="number" min="1" placeholder="0" value="${r.quantity}" onchange="updateRow(${r.id},'quantity',this.value)" required></td>
     <td><input type="text" placeholder="특이사항" value="${r.note}" onchange="updateRow(${r.id},'note',this.value)" style="font-size:13px"></td>
     <td style="text-align:center"><button type="button" class="btn-icon" onclick="removeRow(${r.id})" ${rows.length===1?'disabled':''}>
@@ -514,7 +544,7 @@ function getRows(){return JSON.parse(document.getElementById('taskTableBody').da
 function setRows(r){document.getElementById('taskTableBody').dataset.rows=JSON.stringify(r);renderRows()}
 function addRow(){const r=getRows();r.push({id:++rowId,type:'메인작업',taskName:'',quantity:'',note:'',relatedMain:''});setRows(r)}
 function removeRow(id){const r=getRows();if(r.length<=1)return;setRows(r.filter(x=>x.id!==id))}
-function updateRow(id,f,v){const r=getRows(),x=r.find(x=>x.id===id);if(x)x[f]=v;document.getElementById('taskTableBody').dataset.rows=JSON.stringify(r)}
+function updateRow(id,f,v){const r=getRows(),x=r.find(x=>x.id===id);if(x)x[f]=v;document.getElementById('taskTableBody').dataset.rows=JSON.stringify(r);if(f==='taskName'&&x&&x.type==='밑작업')renderRows()}
 function changeType(id,t){const r=getRows(),x=r.find(x=>x.id===id);if(x){x.type=t;x.taskName='';x.relatedMain=t==='밑작업'?'공통':''}setRows(r)}
 
 async function handleSubmit(e){
@@ -524,7 +554,11 @@ async function handleSubmit(e){
   const rows=getRows().filter(r=>r.taskName&&r.quantity);
   if(!rows.length){showToast('⚠️ 작업 내용 입력');return}
   const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='저장 중...';
-  const payload=rows.map(r=>({date,worker,type:r.type,task_name:r.taskName,quantity:parseInt(r.quantity,10),note:r.note||'',related_main_task:r.type==='밑작업'?(r.relatedMain||'공통'):null}));
+  const payload=rows.map(r=>{
+    let rel=null;
+    if(r.type==='밑작업') rel=autoResolveRelated(r.taskName);
+    return{date,worker,type:r.type,task_name:r.taskName,quantity:parseInt(r.quantity,10),note:r.note||'',related_main_task:rel};
+  });
   const{data,error}=await sb.from('production_records').insert(payload).select();
   btn.disabled=false;btn.textContent='💾 실적 제출하기';
   if(error){showToast('❌ '+error.message);return}
@@ -700,22 +734,23 @@ function fmtTaskName(name){
   return `<div style="white-space:nowrap">${name}</div>`;
 }
 
+// 밑작업의 relatedMain이 특정 메인작업과 매칭되는지 (콤마 구분 지원)
+function isRelatedTo(relatedMain,mainTaskName){
+  if(!relatedMain) return false;
+  if(relatedMain==='공통') return false; // 공통은 별도 체크
+  return relatedMain.split(',').some(t=>t.trim()===mainTaskName);
+}
+
 function renderCapa(){
-  // 새 워킹데이 로직: 메인작업별로 (직접 한 날 + 관련 밑작업 날 + 공통 밑작업 날) 합산
-  // 1. 메인작업별 담당자+품목 합산
   const st={};
   records.forEach(r=>{if(r.type!=='메인작업')return;const k=r.worker+'|'+r.taskName;if(!st[k])st[k]={worker:r.worker,taskName:r.taskName,total:0};st[k].total+=r.quantity});
 
-  // 2. 각 메인작업별 워킹데이 계산
   const cd=Object.values(st).map(s=>{
     const relatedDates=new Set();
     records.forEach(r=>{
       if(r.worker!==s.worker) return;
-      // 해당 메인작업 직접 한 날
       if(r.type==='메인작업'&&r.taskName===s.taskName) relatedDates.add(r.date);
-      // 관련 밑작업 (특정 품목 지정)
-      if(r.type==='밑작업'&&r.relatedMain===s.taskName) relatedDates.add(r.date);
-      // 공통 밑작업
+      if(r.type==='밑작업'&&isRelatedTo(r.relatedMain,s.taskName)) relatedDates.add(r.date);
       if(r.type==='밑작업'&&r.relatedMain==='공통') relatedDates.add(r.date);
     });
     const days=relatedDates.size;
@@ -730,7 +765,6 @@ function renderCapa(){
 }
 
 function renderLeadTime(){
-  // CAPA와 동일 로직으로 일평균 계산
   const st={};
   records.forEach(r=>{if(r.type!=='메인작업')return;const k=r.worker+'|'+r.taskName;if(!st[k])st[k]={worker:r.worker,taskName:r.taskName,total:0};st[k].total+=r.quantity});
 
@@ -739,7 +773,7 @@ function renderLeadTime(){
     records.forEach(r=>{
       if(r.worker!==s.worker) return;
       if(r.type==='메인작업'&&r.taskName===s.taskName) relatedDates.add(r.date);
-      if(r.type==='밑작업'&&r.relatedMain===s.taskName) relatedDates.add(r.date);
+      if(r.type==='밑작업'&&isRelatedTo(r.relatedMain,s.taskName)) relatedDates.add(r.date);
       if(r.type==='밑작업'&&r.relatedMain==='공통') relatedDates.add(r.date);
     });
     const days=relatedDates.size;
@@ -867,14 +901,57 @@ async function removeMainTask(name){
 
 function renderSubTasksList(){
   let h='<div class="settings-list">';
-  subTasks.forEach(t=>{h+=`<div class="settings-item"><span class="name" style="font-size:12px">${t}</span><button class="btn btn-danger btn-sm" onclick="removeSubTask('${t.replace(/'/g,"\\'")}')">삭제</button></div>`});
+  subTasks.forEach(t=>{
+    const mapping=subTaskMap[t]||'공통';
+    const mapLabel=mapping==='공통'?'<span style="color:var(--text-muted)">공통</span>':'<span style="color:#92400e">'+mapping+'</span>';
+    h+=`<div class="settings-item" style="flex-wrap:wrap;gap:6px">
+      <span class="name" style="font-size:12px;flex:1;min-width:120px">${t}</span>
+      <span style="font-size:10px;background:#fffbeb;border:1px solid #fde68a;padding:2px 8px;border-radius:4px;color:#92400e;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${mapping}">▸ ${mapping}</span>
+      <button class="btn btn-outline btn-sm" onclick="editSubMapping('${t.replace(/'/g,"\\'")}')">매핑</button>
+      <button class="btn btn-danger btn-sm" onclick="removeSubTask('${t.replace(/'/g,"\\'")}')">삭제</button>
+    </div>`;
+  });
   h+='</div>';document.getElementById('subTasksList').innerHTML=h;
 }
+
+async function editSubMapping(subName){
+  let mainOpts='<option value="공통" '+(subTaskMap[subName]==='공통'?'selected':'')+'>공통 (전체)</option>';
+  mainTasks.forEach(t=>{
+    const sel=(subTaskMap[subName]||'').split(',').map(x=>x.trim()).includes(t);
+    mainOpts+=`<option value="${t}" ${sel?'selected':''}>${t}</option>`;
+  });
+  const html=`<div class="modal-bg" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-header"><h3>"${subName}" 관련 메인품목 매핑</h3><button class="btn-icon" onclick="closeModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+      <div class="modal-body">
+        <p style="font-size:13px;color:var(--text-sec);margin-bottom:12px">이 밑작업이 어떤 메인작업에 필요한지 선택하세요. Ctrl/Cmd 클릭으로 복수 선택 가능.</p>
+        <select id="subMappingSelect" multiple size="8" style="width:100%;padding:8px;font-size:13px;font-family:inherit;border:1px solid var(--border);border-radius:var(--rs)">${mainOpts}</select>
+        <div style="margin-top:8px;font-size:11px;color:var(--text-muted)">아무것도 선택 안 하면 "공통(전체)"으로 설정됩니다.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal()">취소</button>
+        <button class="btn btn-primary" onclick="saveSubMapping('${subName.replace(/'/g,"\\'")}')">저장</button>
+      </div>
+    </div>
+  </div>`;
+  document.getElementById('modalContainer').innerHTML=html;
+}
+
+async function saveSubMapping(subName){
+  const sel=document.getElementById('subMappingSelect');
+  const selected=[...sel.selectedOptions].map(o=>o.value).filter(v=>v!=='공통');
+  const mapping=selected.length?selected.join(','):'공통';
+  const{error}=await sb.from('sub_tasks').update({related_main_tasks:mapping}).eq('name',subName);
+  if(error){showToast('❌ '+error.message);return}
+  subTaskMap[subName]=mapping;
+  closeModal();renderSubTasksList();showToast('✅ 매핑 저장');
+}
+
 async function addSubTask(){
   const inp=document.getElementById('newSubTaskInput'),name=inp.value.trim();if(!name)return;
-  const{error}=await sb.from('sub_tasks').insert({name,sort_order:subTasks.length+1});
+  const{error}=await sb.from('sub_tasks').insert({name,sort_order:subTasks.length+1,related_main_tasks:'공통'});
   if(error){showToast('❌ '+error.message);return}
-  subTasks.push(name);inp.value='';buildDatalist();renderSubTasksList();showToast('✅ 품목 추가');
+  subTasks.push(name);subTaskMap[name]='공통';inp.value='';buildDatalist();renderSubTasksList();showToast('✅ 품목 추가');
 }
 async function removeSubTask(name){
   if(!confirm(`"${name}" 품목을 삭제하시겠습니까?`))return;
