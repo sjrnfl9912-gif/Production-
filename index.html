@@ -718,6 +718,23 @@ function renderWeekly(){
   h+=`<div style="background:var(--pri-lt);padding:14px;display:flex;justify-content:space-between;align-items:center;font-weight:800;border-top:3px solid var(--pri)">
     <span style="font-size:14px;color:var(--pri-tx)">📊 주간 합계</span>
     <span><span style="font-size:18px;color:var(--pri)">${wm+ws} EA</span> <span style="font-size:11px;font-weight:400;color:var(--pri-tx)">메인${wm}/밑${ws}</span></span></div>`;
+
+  // 메인작업 품목별 주간 요약
+  const mainSummary={};
+  wr.filter(r=>r.type==='메인작업').forEach(r=>{mainSummary[r.taskName]=(mainSummary[r.taskName]||0)+r.quantity});
+  const mainItems=Object.entries(mainSummary).sort((a,b)=>b[1]-a[1]);
+  if(mainItems.length){
+    h+=`<div style="background:#f8fafc;padding:12px 14px;border-top:1px solid var(--border-light)">
+      <div style="font-size:12px;font-weight:700;color:var(--text-sec);margin-bottom:8px">📦 금주 메인작업 생산 요약</div>`;
+    mainItems.forEach(([name,qty])=>{
+      h+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:13px">
+        <span style="font-weight:600;color:var(--ind)">${name}</span>
+        <span style="font-weight:800;color:var(--pri)">${qty} EA</span>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+
   document.getElementById('weeklyArea').innerHTML=h;
 }
 
