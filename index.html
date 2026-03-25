@@ -415,6 +415,27 @@ const AppState = {
 
 // ═══════════ UTILS ═══════════
 function showToast(m,ms=2500){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),ms)}
+
+// ═══ SECTION: UI Utilities ═══
+function customConfirm(message) {
+  return new Promise((resolve) => {
+    const container = document.getElementById('modalContainer');
+    container.innerHTML = `
+      <div class="modal-bg" id="confirmModal">
+        <div class="modal" style="max-width:320px">
+          <div class="modal-body" style="text-align:center;padding:28px 24px">
+            <p style="font-size:15px;font-weight:600;margin-bottom:20px">${message}</p>
+            <div style="display:flex;gap:8px;justify-content:center">
+              <button class="btn btn-outline" id="confirmNo">취소</button>
+              <button class="btn btn-danger" id="confirmYes">확인</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    document.getElementById('confirmYes').onclick = () => { container.innerHTML = ''; resolve(true); };
+    document.getElementById('confirmNo').onclick  = () => { container.innerHTML = ''; resolve(false); };
+  });
+}
 function isWithin7Days(dateStr){const d=new Date(dateStr+'T00:00:00'),now=new Date();now.setHours(0,0,0,0);const diff=(now-d)/(1000*60*60*24);return diff<=7}
 function todayStr(){return new Date().toISOString().split('T')[0]}
 
@@ -676,7 +697,7 @@ async function saveEdit(id,isAdmin){
 }
 
 async function deleteRecord(id,isAdmin){
-  if(!confirm('정말 삭제하시겠습니까?'))return;
+  if(!await customConfirm('정말 삭제하시겠습니까?'))return;
   const{error}=await sb.from('production_records').delete().eq('id',id);
   if(error){showToast('❌ '+error.message);return}
   records=records.filter(r=>r.id!==id);
@@ -1018,7 +1039,7 @@ async function addWorker(){
   workers.push(name);workers.sort();inp.value='';populateWorkerSelects();renderWorkersList();showToast('✅ 작업자 추가');
 }
 async function removeWorker(name){
-  if(!confirm(`"${name}" 작업자를 삭제하시겠습니까?`))return;
+  if(!await customConfirm(`"${name}" 작업자를 삭제하시겠습니까?`))return;
   const{error}=await sb.from('workers').update({active:false}).eq('name',name);
   if(error){showToast('❌ '+error.message);return}
   workers=workers.filter(w=>w!==name);populateWorkerSelects();renderWorkersList();showToast('🗑️ 삭제 완료');
@@ -1036,7 +1057,7 @@ async function addMainTask(){
   mainTasks.push(name);inp.value='';buildDatalist();renderMainTasksList();showToast('✅ 품목 추가');
 }
 async function removeMainTask(name){
-  if(!confirm(`"${name}" 품목을 삭제하시겠습니까?`))return;
+  if(!await customConfirm(`"${name}" 품목을 삭제하시겠습니까?`))return;
   const{error}=await sb.from('main_tasks').update({active:false}).eq('name',name);
   if(error){showToast('❌ '+error.message);return}
   mainTasks=mainTasks.filter(t=>t!==name);buildDatalist();renderMainTasksList();showToast('🗑️ 삭제');
@@ -1097,7 +1118,7 @@ async function addSubTask(){
   subTasks.push(name);subTaskMap[name]='공통';inp.value='';buildDatalist();renderSubTasksList();showToast('✅ 품목 추가');
 }
 async function removeSubTask(name){
-  if(!confirm(`"${name}" 품목을 삭제하시겠습니까?`))return;
+  if(!await customConfirm(`"${name}" 품목을 삭제하시겠습니까?`))return;
   const{error}=await sb.from('sub_tasks').update({active:false}).eq('name',name);
   if(error){showToast('❌ '+error.message);return}
   subTasks=subTasks.filter(t=>t!==name);buildDatalist();renderSubTasksList();showToast('🗑️ 삭제');
