@@ -26,8 +26,8 @@ Requirements for this milestone. Each maps to roadmap phases.
 ### Code Structure
 
 - [ ] **CODE-01**: CSS가 섹션별로 정리되고 인라인 스타일이 CSS 클래스로 교체된다
-- [ ] **CODE-02**: JS 상태가 DOM `data-rows` 대신 JS 배열/객체로 관리된다
-- [ ] **CODE-03**: `window.alert()`/`window.confirm()`이 커스텀 모달로 교체된다 (카톡 웹뷰 호환)
+- [x] **CODE-02**: JS 상태가 DOM `data-rows` 대신 JS 배열/객체로 관리된다
+- [x] **CODE-03**: `window.alert()`/`window.confirm()`이 커스텀 모달로 교체된다 (카톡 웹뷰 호환)
 - [ ] **CODE-04**: 한글 IME `isComposing` 가드가 텍스트 입력에 적용된다
 - [ ] **CODE-05**: 단일 HTML 파일 구조가 유지되면서 코드가 논리적 섹션으로 정리된다
 
@@ -97,8 +97,8 @@ Deferred to future release.
 | TOUCH-04 | Phase 2 | Pending |
 | TOUCH-05 | Phase 2 | Pending |
 | CODE-01 | Phase 1 | Pending |
-| CODE-02 | Phase 1 | Pending |
-| CODE-03 | Phase 1 | Pending |
+| CODE-02 | Phase 1 | Complete |
+| CODE-03 | Phase 1 | Complete |
 | CODE-04 | Phase 1 | Pending |
 | CODE-05 | Phase 1 | Pending |
 | UI-01 | Phase 3 | Pending |
