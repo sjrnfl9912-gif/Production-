@@ -86,40 +86,40 @@ Deferred to future release.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VIEW-01 | TBD | Pending |
-| VIEW-02 | TBD | Pending |
-| VIEW-03 | TBD | Pending |
-| VIEW-04 | TBD | Pending |
-| VIEW-05 | TBD | Pending |
-| TOUCH-01 | TBD | Pending |
-| TOUCH-02 | TBD | Pending |
-| TOUCH-03 | TBD | Pending |
-| TOUCH-04 | TBD | Pending |
-| TOUCH-05 | TBD | Pending |
-| CODE-01 | TBD | Pending |
-| CODE-02 | TBD | Pending |
-| CODE-03 | TBD | Pending |
-| CODE-04 | TBD | Pending |
-| CODE-05 | TBD | Pending |
-| UI-01 | TBD | Pending |
-| UI-02 | TBD | Pending |
-| UI-03 | TBD | Pending |
-| UI-04 | TBD | Pending |
-| UI-05 | TBD | Pending |
-| BIZ-01 | TBD | Pending |
-| BIZ-02 | TBD | Pending |
-| BIZ-03 | TBD | Pending |
-| BIZ-04 | TBD | Pending |
-| PWA-01 | TBD | Pending |
-| PWA-02 | TBD | Pending |
-| PWA-03 | TBD | Pending |
-| PWA-04 | TBD | Pending |
+| VIEW-01 | Phase 1 | Pending |
+| VIEW-02 | Phase 1 | Pending |
+| VIEW-03 | Phase 1 | Pending |
+| VIEW-04 | Phase 1 | Pending |
+| VIEW-05 | Phase 1 | Pending |
+| TOUCH-01 | Phase 2 | Pending |
+| TOUCH-02 | Phase 2 | Pending |
+| TOUCH-03 | Phase 2 | Pending |
+| TOUCH-04 | Phase 2 | Pending |
+| TOUCH-05 | Phase 2 | Pending |
+| CODE-01 | Phase 1 | Pending |
+| CODE-02 | Phase 1 | Pending |
+| CODE-03 | Phase 1 | Pending |
+| CODE-04 | Phase 1 | Pending |
+| CODE-05 | Phase 1 | Pending |
+| UI-01 | Phase 3 | Pending |
+| UI-02 | Phase 3 | Pending |
+| UI-03 | Phase 3 | Pending |
+| UI-04 | Phase 3 | Pending |
+| UI-05 | Phase 3 | Pending |
+| BIZ-01 | Phase 4 | Pending |
+| BIZ-02 | Phase 4 | Pending |
+| BIZ-03 | Phase 4 | Pending |
+| BIZ-04 | Phase 4 | Pending |
+| PWA-01 | Phase 5 | Pending |
+| PWA-02 | Phase 5 | Pending |
+| PWA-03 | Phase 5 | Pending |
+| PWA-04 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 28 total
-- Mapped to phases: 0
-- Unmapped: 28 ⚠️
+- Mapped to phases: 28
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-03-25*
-*Last updated: 2026-03-25 after initial definition*
+*Last updated: 2026-03-25 after roadmap creation — traceability filled*
