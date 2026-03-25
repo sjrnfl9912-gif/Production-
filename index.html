@@ -408,6 +408,11 @@ let records=[], workers=[], mainTasks=[], subTasks=[], adminPin='1234';
 let rowId=0;
 let adminUnlocked=false;
 
+// ═══ SECTION: State Management ═══
+const AppState = {
+  tasks: [],  // { id, type, taskName, quantity, note, relatedMain }
+};
+
 // ═══════════ UTILS ═══════════
 function showToast(m,ms=2500){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),ms)}
 function isWithin7Days(dateStr){const d=new Date(dateStr+'T00:00:00'),now=new Date();now.setHours(0,0,0,0);const diff=(now-d)/(1000*60*60*24);return diff<=7}
@@ -543,7 +548,7 @@ function buildRelatedInfo(type,taskName){
   return `<div style="margin-top:4px;font-size:10px;padding:4px 8px;background:#fffbeb;border:1px solid #fde68a;border-radius:4px;color:#92400e">▸ ${label}</div>`;
 }
 function renderRows(){
-  const tbody=document.getElementById('taskTableBody'),rows=JSON.parse(tbody.dataset.rows||'[]');
+  const tbody=document.getElementById('taskTableBody'),rows=AppState.tasks;
   tbody.innerHTML=rows.map(r=>{
     return `<tr>
     <td><select class="type-select ${getTypeClass(r.type)}" onchange="changeType(${r.id},this.value)">
@@ -557,11 +562,11 @@ function renderRows(){
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
     </button></td></tr>`}).join('');
 }
-function getRows(){return JSON.parse(document.getElementById('taskTableBody').dataset.rows||'[]')}
-function setRows(r){document.getElementById('taskTableBody').dataset.rows=JSON.stringify(r);renderRows()}
+function getRows(){return AppState.tasks}
+function setRows(r){AppState.tasks=r;renderRows()}
 function addRow(){const r=getRows();r.push({id:++rowId,type:'메인작업',taskName:'',quantity:'',note:'',relatedMain:''});setRows(r)}
 function removeRow(id){const r=getRows();if(r.length<=1)return;setRows(r.filter(x=>x.id!==id))}
-function updateRow(id,f,v){const r=getRows(),x=r.find(x=>x.id===id);if(x)x[f]=v;document.getElementById('taskTableBody').dataset.rows=JSON.stringify(r);if(f==='taskName'&&x&&x.type==='밑작업')renderRows()}
+function updateRow(id,f,v){const r=getRows(),x=r.find(x=>x.id===id);if(x)x[f]=v;AppState.tasks=r;if(f==='taskName'&&x&&x.type==='밑작업')renderRows()}
 function changeType(id,t){const r=getRows(),x=r.find(x=>x.id===id);if(x){x.type=t;x.taskName='';x.relatedMain=t==='밑작업'?'공통':''}setRows(r)}
 
 async function handleSubmit(e){
