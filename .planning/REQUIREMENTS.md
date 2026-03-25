@@ -10,8 +10,8 @@ Requirements for this milestone. Each maps to roadmap phases.
 ### Viewport & Layout
 
 - [x] **VIEW-01**: 모든 레이아웃이 `100dvh` 기반으로 카카오톡 웹뷰 주소창/하단 네비를 고려한 높이를 사용한다
-- [ ] **VIEW-02**: iOS 키보드 오픈 시 VisualViewport API로 레이아웃이 안정적으로 유지된다
-- [ ] **VIEW-03**: 입력 필드 포커스 시 해당 필드가 키보드 위로 자동 스크롤된다 (scrollIntoView)
+- [x] **VIEW-02**: iOS 키보드 오픈 시 VisualViewport API로 레이아웃이 안정적으로 유지된다
+- [x] **VIEW-03**: 입력 필드 포커스 시 해당 필드가 키보드 위로 자동 스크롤된다 (scrollIntoView)
 - [x] **VIEW-04**: 모든 input/select 요소가 `font-size: 16px` 이상으로 iOS 자동 확대가 발생하지 않는다
 - [x] **VIEW-05**: CSS가 mobile-first 미디어쿼리로 재구성된다 (기본 모바일 → `min-width`로 PC 확장)
 
@@ -28,7 +28,7 @@ Requirements for this milestone. Each maps to roadmap phases.
 - [x] **CODE-01**: CSS가 섹션별로 정리되고 인라인 스타일이 CSS 클래스로 교체된다
 - [x] **CODE-02**: JS 상태가 DOM `data-rows` 대신 JS 배열/객체로 관리된다
 - [x] **CODE-03**: `window.alert()`/`window.confirm()`이 커스텀 모달로 교체된다 (카톡 웹뷰 호환)
-- [ ] **CODE-04**: 한글 IME `isComposing` 가드가 텍스트 입력에 적용된다
+- [x] **CODE-04**: 한글 IME `isComposing` 가드가 텍스트 입력에 적용된다
 - [x] **CODE-05**: 단일 HTML 파일 구조가 유지되면서 코드가 논리적 섹션으로 정리된다
 
 ### UI Redesign
@@ -87,8 +87,8 @@ Deferred to future release.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | VIEW-01 | Phase 1 | Complete |
-| VIEW-02 | Phase 1 | Pending |
-| VIEW-03 | Phase 1 | Pending |
+| VIEW-02 | Phase 1 | Complete |
+| VIEW-03 | Phase 1 | Complete |
 | VIEW-04 | Phase 1 | Complete |
 | VIEW-05 | Phase 1 | Complete |
 | TOUCH-01 | Phase 2 | Pending |
@@ -99,7 +99,7 @@ Deferred to future release.
 | CODE-01 | Phase 1 | Complete |
 | CODE-02 | Phase 1 | Complete |
 | CODE-03 | Phase 1 | Complete |
-| CODE-04 | Phase 1 | Pending |
+| CODE-04 | Phase 1 | Complete |
 | CODE-05 | Phase 1 | Complete |
 | UI-01 | Phase 3 | Pending |
 | UI-02 | Phase 3 | Pending |

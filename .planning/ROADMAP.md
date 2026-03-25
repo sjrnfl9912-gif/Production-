@@ -9,7 +9,7 @@
 
 ## Phases
 
-- [ ] **Phase 1: Foundation** — CSS 구조 재편 + 뷰포트 안정화 (viewport height, dvh, VisualViewport, JS 상태 마이그레이션)
+- [x] **Phase 1: Foundation** — CSS 구조 재편 + 뷰포트 안정화 (viewport height, dvh, VisualViewport, JS 상태 마이그레이션) (completed 2026-03-25)
 - [ ] **Phase 2: Touch UX** — 터치 대상 크기, 탭 지연 제거, 터치 피드백, 스와이프 전환, 테이블 스크롤
 - [ ] **Phase 3: UI Redesign** — 모바일 카드형 폼, 대시보드 최적화, 하단 탭바, 스켈레톤/스피너, 내 실적 수정 화면
 - [ ] **Phase 4: Business Logic** — 100대 소요일 산출 로직 개선 (메인작업 필터, 가중 평균, 신뢰도 경고)
@@ -33,7 +33,7 @@
 Plans:
 - [x] 01-01-PLAN.md — CSS mobile-first 전환 + 섹션 주석 + dvh + 인라인 스타일 교체
 - [x] 01-02-PLAN.md — AppState JS 상태관리 마이그레이션 + customConfirm 모달
-- [ ] 01-03-PLAN.md — VisualViewport scrollIntoView + --vh 주입 + IME isComposing 가드
+- [x] 01-03-PLAN.md — VisualViewport scrollIntoView + --vh 주입 + IME isComposing 가드
 **UI hint**: yes
 
 ### Phase 2: Touch UX
@@ -90,7 +90,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 2/3 | In Progress|  |
+| 1. Foundation | 3/3 | Complete   | 2026-03-25 |
 | 2. Touch UX | 0/0 | Not started | - |
 | 3. UI Redesign | 0/0 | Not started | - |
 | 4. Business Logic | 0/0 | Not started | - |

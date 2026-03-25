@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-25T08:48:01.779Z"
+last_updated: "2026-03-25T08:54:43.260Z"
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State: 생산 관리 시스템 리팩토링
 
 **Last updated:** 2026-03-25
-**Session:** Completed 01-foundation/01-01-PLAN.md
+**Session:** Checkpoint 01-03 Task 3 — awaiting human-verify (Tasks 1+2 committed)
 
 ---
 
@@ -28,8 +28,8 @@ progress:
 
 ## Current Position
 
-Phase: 01 (foundation) — EXECUTING
-Plan: 3 of 3
+Phase: 01 (foundation) — AWAITING HUMAN VERIFY (checkpoint at 01-03 Task 3)
+Plan: 3 of 3 (Tasks 1+2 complete, Task 3 human-verify pending)
 
 ## Phase Summary
 
@@ -54,6 +54,7 @@ Plan: 3 of 3
 ---
 | Phase 01-foundation P02 | 2 | 2 tasks | 1 files |
 | Phase 01-foundation P01 | 10 | 2 tasks | 1 files |
+| Phase 01-foundation P03 | 15 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,8 @@ Plan: 3 of 3
 | customConfirm() reuses .modal-bg/.modal CSS | CSS 추가 없이 Promise 기반 확인 모달 구현 — iOS 카카오톡 window.confirm() 차단 버그 수정 |
 | Phase 5 depends on Phase 3 | Service Worker를 깨진 레이아웃에 캐싱하면 복구 비용이 높음; 안정화 후 마지막에 추가 |
 | Phase 2 depends on Phase 1 | 터치 타겟/스크롤 수정은 dvh 뷰포트 기반이 정확해야 검증 가능 |
+| syncViewportHeight on both resize+scroll | scroll event fires on iOS when keyboard pans the viewport independently — needed for --vh accuracy |
+| isComposingEvent() uses keyCode===229 fallback | legacy Android browsers don't support e.isComposing; keyCode 229 is the IME composition marker |
 
 ### Research Flags (carry forward)
 
