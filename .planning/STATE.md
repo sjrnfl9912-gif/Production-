@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-25T08:39:03.311Z"
+last_updated: "2026-03-25T08:48:01.779Z"
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State: 생산 관리 시스템 리팩토링
 
 **Last updated:** 2026-03-25
-**Session:** Completed 01-foundation/01-02-PLAN.md
+**Session:** Completed 01-foundation/01-01-PLAN.md
 
 ---
 
@@ -29,7 +29,7 @@ progress:
 ## Current Position
 
 Phase: 01 (foundation) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Phase Summary
 
@@ -53,6 +53,7 @@ Plan: 2 of 3
 
 ---
 | Phase 01-foundation P02 | 2 | 2 tasks | 1 files |
+| Phase 01-foundation P01 | 10 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,9 @@ Plan: 2 of 3
 | Phase 1 = VIEW + CODE together | CSS 구조 정리 없이는 뷰포트 수정이 inline-style에 막힘; 동시 진행이 필수 |
 | Phase 4 depends on Phase 1 only | 비즈니스 로직은 UI 독립적이나 JS 상태 마이그레이션(CODE-02) 완료 후 시작 |
 | AppState.tasks replaces DOM data-rows | DOM-coupled 상태 제거 → Phase 4 비즈니스 로직에서 AppState.tasks 직접 참조 가능 |
+| CSS mobile-first: max-width 해체 → min-width 오버라이드 | mobile-first 역전으로 모바일이 기본, 데스크탑이 오버라이드 — 인라인 스타일 미디어쿼리 충돌 제거 |
+| 100dvh + 100vh cascade 패턴 | !important 없이 cascade를 이용하여 구형 브라우저 폴백 처리 (D-17) |
+| font-size:16px 기본 스타일, 데스크탑에서만 14px override | iOS 자동 줌 방지, !important 제거 (D-18) |
 | customConfirm() reuses .modal-bg/.modal CSS | CSS 추가 없이 Promise 기반 확인 모달 구현 — iOS 카카오톡 window.confirm() 차단 버그 수정 |
 | Phase 5 depends on Phase 3 | Service Worker를 깨진 레이아웃에 캐싱하면 복구 비용이 높음; 안정화 후 마지막에 추가 |
 | Phase 2 depends on Phase 1 | 터치 타겟/스크롤 수정은 dvh 뷰포트 기반이 정확해야 검증 가능 |
