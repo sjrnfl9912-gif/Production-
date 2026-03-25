@@ -29,7 +29,11 @@
   3. 입력 필드를 탭할 때 iOS 자동 확대(zoom)가 발생하지 않는다
   4. window.alert()/confirm() 대신 커스텀 모달/토스트가 표시되어 카카오톡 웹뷰에서도 정상 동작한다
   5. 한글 입력 중 키보드 Enter를 눌러도 조합 중인 글자가 중복 제출되지 않는다
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 01-01-PLAN.md — CSS mobile-first 전환 + 섹션 주석 + dvh + 인라인 스타일 교체
+- [ ] 01-02-PLAN.md — AppState JS 상태관리 마이그레이션 + customConfirm 모달
+- [ ] 01-03-PLAN.md — VisualViewport scrollIntoView + --vh 주입 + IME isComposing 가드
 **UI hint**: yes
 
 ### Phase 2: Touch UX
@@ -86,7 +90,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/0 | Not started | - |
+| 1. Foundation | 0/3 | Planned | - |
 | 2. Touch UX | 0/0 | Not started | - |
 | 3. UI Redesign | 0/0 | Not started | - |
 | 4. Business Logic | 0/0 | Not started | - |
@@ -132,4 +136,4 @@
 ---
 
 *Roadmap created: 2026-03-25*
-*Last updated: 2026-03-25 after initial creation*
+*Last updated: 2026-03-25 Phase 1 planned (3 plans)*
