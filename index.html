@@ -409,6 +409,9 @@ const sb=supabase.createClient(SB_URL,SB_KEY);
 let records=[], workers=[], mainTasks=[], subTasks=[], adminPin='1234';
 let rowId=0;
 let adminUnlocked=false;
+const AppState = {
+  tasks: [],  // { id, type, taskName, quantity, note, relatedMain }
+};
 
 // ═══════════ UTILS ═══════════
 function showToast(m,ms=2500){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),ms)}
@@ -416,6 +419,16 @@ function isWithin7Days(dateStr){const d=new Date(dateStr+'T00:00:00'),now=new Da
 function todayStr(){return new Date().toISOString().split('T')[0]}
 // IME 조합 중인지 확인 (한글 입력 가드)
 function isComposingEvent(e){return e.isComposing||e.keyCode===229}
+
+// Promise-based confirm modal (iOS 카카오톡 window.confirm() 차단 버그 수정)
+function customConfirm(message) {
+  return new Promise(resolve => {
+    const container = document.getElementById('modalContainer');
+    container.innerHTML = `<div class="modal-bg" style="display:flex"><div class="modal" style="max-width:320px;text-align:center"><p style="margin-bottom:20px;font-size:15px">${message}</p><div style="display:flex;gap:10px;justify-content:center"><button class="btn btn-outline" id="cfmCancel">취소</button><button class="btn btn-danger" id="cfmOk">확인</button></div></div></div>`;
+    container.querySelector('#cfmOk').onclick = () => { container.innerHTML = ''; resolve(true); };
+    container.querySelector('#cfmCancel').onclick = () => { container.innerHTML = ''; resolve(false); };
+  });
+}
 
 // ═══ SECTION: Viewport Handler ═══
 function syncViewportHeight(){
@@ -558,7 +571,7 @@ function buildRelatedInfo(type,taskName){
   return `<div style="margin-top:4px;font-size:10px;padding:4px 8px;background:#fffbeb;border:1px solid #fde68a;border-radius:4px;color:#92400e">▸ ${label}</div>`;
 }
 function renderRows(){
-  const tbody=document.getElementById('taskTableBody'),rows=JSON.parse(tbody.dataset.rows||'[]');
+  const tbody=document.getElementById('taskTableBody'),rows=AppState.tasks;
   tbody.innerHTML=rows.map(r=>{
     return `<tr>
     <td><select class="type-select ${getTypeClass(r.type)}" onchange="changeType(${r.id},this.value)">
@@ -572,11 +585,11 @@ function renderRows(){
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
     </button></td></tr>`}).join('');
 }
-function getRows(){return JSON.parse(document.getElementById('taskTableBody').dataset.rows||'[]')}
-function setRows(r){document.getElementById('taskTableBody').dataset.rows=JSON.stringify(r);renderRows()}
+function getRows(){return AppState.tasks}
+function setRows(r){AppState.tasks=r;renderRows()}
 function addRow(){const r=getRows();r.push({id:++rowId,type:'메인작업',taskName:'',quantity:'',note:'',relatedMain:''});setRows(r)}
 function removeRow(id){const r=getRows();if(r.length<=1)return;setRows(r.filter(x=>x.id!==id))}
-function updateRow(id,f,v){const r=getRows(),x=r.find(x=>x.id===id);if(x)x[f]=v;document.getElementById('taskTableBody').dataset.rows=JSON.stringify(r);if(f==='taskName'&&x&&x.type==='밑작업')renderRows()}
+function updateRow(id,f,v){const r=getRows(),x=r.find(x=>x.id===id);if(x)x[f]=v;AppState.tasks=r;if(f==='taskName'&&x&&x.type==='밑작업')renderRows()}
 function changeType(id,t){const r=getRows(),x=r.find(x=>x.id===id);if(x){x.type=t;x.taskName='';x.relatedMain=t==='밑작업'?'공통':''}setRows(r)}
 
 async function handleSubmit(e){
@@ -686,7 +699,7 @@ async function saveEdit(id,isAdmin){
 }
 
 async function deleteRecord(id,isAdmin){
-  if(!confirm('정말 삭제하시겠습니까?'))return;
+  if(!await customConfirm('정말 삭제하시겠습니까?'))return;
   const{error}=await sb.from('production_records').delete().eq('id',id);
   if(error){showToast('❌ '+error.message);return}
   records=records.filter(r=>r.id!==id);
@@ -1028,7 +1041,7 @@ async function addWorker(){
   workers.push(name);workers.sort();inp.value='';populateWorkerSelects();renderWorkersList();showToast('✅ 작업자 추가');
 }
 async function removeWorker(name){
-  if(!confirm(`"${name}" 작업자를 삭제하시겠습니까?`))return;
+  if(!await customConfirm(`"${name}" 작업자를 삭제하시겠습니까?`))return;
   const{error}=await sb.from('workers').update({active:false}).eq('name',name);
   if(error){showToast('❌ '+error.message);return}
   workers=workers.filter(w=>w!==name);populateWorkerSelects();renderWorkersList();showToast('🗑️ 삭제 완료');
@@ -1046,7 +1059,7 @@ async function addMainTask(){
   mainTasks.push(name);inp.value='';buildDatalist();renderMainTasksList();showToast('✅ 품목 추가');
 }
 async function removeMainTask(name){
-  if(!confirm(`"${name}" 품목을 삭제하시겠습니까?`))return;
+  if(!await customConfirm(`"${name}" 품목을 삭제하시겠습니까?`))return;
   const{error}=await sb.from('main_tasks').update({active:false}).eq('name',name);
   if(error){showToast('❌ '+error.message);return}
   mainTasks=mainTasks.filter(t=>t!==name);buildDatalist();renderMainTasksList();showToast('🗑️ 삭제');
@@ -1107,7 +1120,7 @@ async function addSubTask(){
   subTasks.push(name);subTaskMap[name]='공통';inp.value='';buildDatalist();renderSubTasksList();showToast('✅ 품목 추가');
 }
 async function removeSubTask(name){
-  if(!confirm(`"${name}" 품목을 삭제하시겠습니까?`))return;
+  if(!await customConfirm(`"${name}" 품목을 삭제하시겠습니까?`))return;
   const{error}=await sb.from('sub_tasks').update({active:false}).eq('name',name);
   if(error){showToast('❌ '+error.message);return}
   subTasks=subTasks.filter(t=>t!==name);buildDatalist();renderSubTasksList();showToast('🗑️ 삭제');
@@ -1149,6 +1162,17 @@ document.addEventListener('DOMContentLoaded',async()=>{
   await loadAll();
   addRow();
   initKeyboardHandler();
+
+  // ═══ 한글 IME 가드: Enter 키로 폼 제출 방지 ═══
+  document.querySelectorAll('#entryForm input[type="text"],#entryForm input[type="number"]').forEach(inp=>{
+    inp.addEventListener('keydown',e=>{
+      if(e.key==='Enter'&&isComposingEvent(e)){e.preventDefault();e.stopPropagation();}
+    });
+  });
+  // 동적 생성 input에 대한 IME 가드 (이벤트 위임)
+  document.getElementById('taskTableBody').addEventListener('keydown',e=>{
+    if(e.target.tagName==='INPUT'&&e.key==='Enter'&&isComposingEvent(e)){e.preventDefault();e.stopPropagation();}
+  });
 });
 
 // 카카오톡 인앱브라우저: 키보드 올라올 때 하단 탭바 숨기기
