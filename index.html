@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#1e3a5f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -173,6 +173,7 @@ input[type=number]{text-align:right}
 .note-input{font-size:13px}
 .hidden{display:none}
 .text-muted{color:var(--text-muted)}
+.full-height{height:calc(var(--vh,1vh)*100)}
 
 /* ═══ SECTION: Animations ═══ */
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -413,6 +414,19 @@ let adminUnlocked=false;
 function showToast(m,ms=2500){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),ms)}
 function isWithin7Days(dateStr){const d=new Date(dateStr+'T00:00:00'),now=new Date();now.setHours(0,0,0,0);const diff=(now-d)/(1000*60*60*24);return diff<=7}
 function todayStr(){return new Date().toISOString().split('T')[0]}
+// IME 조합 중인지 확인 (한글 입력 가드)
+function isComposingEvent(e){return e.isComposing||e.keyCode===229}
+
+// ═══ SECTION: Viewport Handler ═══
+function syncViewportHeight(){
+  const vh=(window.visualViewport?.height??window.innerHeight)*0.01;
+  document.documentElement.style.setProperty('--vh',`${vh}px`);
+}
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',syncViewportHeight);
+  window.visualViewport.addEventListener('scroll',syncViewportHeight);
+}
+syncViewportHeight();
 
 // ═══════════ DATA LOADING ═══════════
 let subTaskMap={}; // 밑작업명 → 관련 메인품목 매핑
@@ -1148,6 +1162,14 @@ function initKeyboardHandler(){
       if(!isMobile())return;
       const isKeyboard=window.visualViewport.height<baseH*0.75;
       tabNav.style.display=isKeyboard?'none':'';
+      // ─── 추가: 키보드 오픈 시 포커스 필드 스크롤 (VIEW-03) ───
+      if(isKeyboard){
+        const focused=document.activeElement;
+        if(focused&&['INPUT','SELECT','TEXTAREA'].includes(focused.tagName)){
+          setTimeout(()=>focused.scrollIntoView({block:'center',behavior:'smooth'}),100);
+        }
+      }
+      // ─── 끝 ───
       // 키보드 닫힐 때 기준 높이 갱신
       if(!isKeyboard)baseH=window.visualViewport.height;
     });
