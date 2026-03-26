@@ -530,7 +530,7 @@ document.getElementById('tabNav').addEventListener('click',e=>{
   if(btn.dataset.tab==='admin'&&adminUnlocked) renderAdminSettings();
 });
 
-// ═══════════ SWIPE TAB NAVIGATION (TOUCH-04) ═══════════
+// ═══════════ SWIPE TAB NAVIGATION — initSwipeNav() (TOUCH-04) ═══════════
 (function initSwipeNav(){
   const TAB_ORDER=['input','myrecords','dashboard','admin'];
   const MIN_X=60;  // px: 스와이프로 인정하는 최소 수평 이동
