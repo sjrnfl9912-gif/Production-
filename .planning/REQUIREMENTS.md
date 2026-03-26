@@ -41,10 +41,10 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Business Logic
 
-- [ ] **BIZ-01**: 100대 소요일 산출 시 메인작업만 필터링하여 계산한다 (서브/기타 제외)
-- [ ] **BIZ-02**: 하루 복수 품목 작업 시 해당 품목 전용 작업시간 비율로 일평균을 보정한다
-- [ ] **BIZ-03**: 데이터 3일 미만일 때 신뢰도 경고를 강화하고 소요일 표시를 조건부로 한다
-- [ ] **BIZ-04**: 100대 소요일 산출 공식이 가중 평균 또는 중앙값 기반으로 개선된다
+- [x] **BIZ-01**: 100대 소요일 산출 시 메인작업만 필터링하여 계산한다 (서브/기타 제외)
+- [x] **BIZ-02**: 하루 복수 품목 작업 시 해당 품목 전용 작업시간 비율로 일평균을 보정한다
+- [x] **BIZ-03**: 데이터 3일 미만일 때 신뢰도 경고를 강화하고 소요일 표시를 조건부로 한다
+- [x] **BIZ-04**: 100대 소요일 산출 공식이 가중 평균 또는 중앙값 기반으로 개선된다
 
 ### PWA
 
@@ -106,10 +106,10 @@ Deferred to future release.
 | UI-03 | Phase 3 | Complete |
 | UI-04 | Phase 3 | Complete |
 | UI-05 | Phase 3 | Complete |
-| BIZ-01 | Phase 4 | Pending |
-| BIZ-02 | Phase 4 | Pending |
-| BIZ-03 | Phase 4 | Pending |
-| BIZ-04 | Phase 4 | Pending |
+| BIZ-01 | Phase 4 | Complete |
+| BIZ-02 | Phase 4 | Complete |
+| BIZ-03 | Phase 4 | Complete |
+| BIZ-04 | Phase 4 | Complete |
 | PWA-01 | Phase 5 | Pending |
 | PWA-02 | Phase 5 | Pending |
 | PWA-03 | Phase 5 | Pending |

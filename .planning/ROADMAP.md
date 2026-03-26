@@ -12,7 +12,7 @@
 - [x] **Phase 1: Foundation** — CSS 구조 재편 + 뷰포트 안정화 (viewport height, dvh, VisualViewport, JS 상태 마이그레이션) (completed 2026-03-25)
 - [ ] **Phase 2: Touch UX** — 터치 대상 크기, 탭 지연 제거, 터치 피드백, 스와이프 전환, 테이블 스크롤
 - [ ] **Phase 3: UI Redesign** — 모바일 카드형 폼, 대시보드 최적화, 하단 탭바, 스켈레톤/스피너, 내 실적 수정 화면
-- [ ] **Phase 4: Business Logic** — 100대 소요일 산출 로직 개선 (메인작업 필터, 가중 평균, 신뢰도 경고)
+- [x] **Phase 4: Business Logic** — 100대 소요일 산출 로직 개선 (메인작업 필터, 가중 평균, 신뢰도 경고) (completed 2026-03-26)
 - [ ] **Phase 5: PWA** — manifest.json, Service Worker 캐싱, KakaoTalk UA 가드, 오프라인 UI
 
 ---
@@ -81,7 +81,7 @@ Plans:
   4. 소요일 계산 공식이 단순 나누기가 아닌 가중 평균 또는 중앙값 기반으로 동작한다
 **Plans**: 1 plan
 Plans:
-- [ ] 04-01-PLAN.md — calcLeadTimeStats() 헬퍼 추가 + renderCapa()/renderLeadTime() 업데이트 (BIZ-01~04)
+- [x] 04-01-PLAN.md — calcLeadTimeStats() 헬퍼 추가 + renderCapa()/renderLeadTime() 업데이트 (BIZ-01~04)
 
 ### Phase 5: PWA
 **Goal**: 카카오톡 외 브라우저 사용자는 앱을 홈 화면에 추가할 수 있고, 재방문 시 빠르게 로딩된다
@@ -103,7 +103,7 @@ Plans:
 | 1. Foundation | 3/3 | Complete   | 2026-03-25 |
 | 2. Touch UX | 2/3 | In Progress|  |
 | 3. UI Redesign | 2/3 | In Progress|  |
-| 4. Business Logic | 0/1 | Not started | - |
+| 4. Business Logic | 1/1 | Complete   | 2026-03-26 |
 | 5. PWA | 0/0 | Not started | - |
 
 ---

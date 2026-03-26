@@ -2,19 +2,19 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-03-26T00:55:04.410Z"
+status: ready_for_verification
+last_updated: "2026-03-26T01:30:00.000Z"
 progress:
   total_phases: 5
-  completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  completed_phases: 4
+  total_plans: 10
+  completed_plans: 10
 ---
 
 # Project State: 생산 관리 시스템 리팩토링
 
 **Last updated:** 2026-03-26
-**Session:** Completed 03-02-PLAN.md (JS Loading State + My Records UX)
+**Session:** Completed 04-01-PLAN.md (Business Logic — 100대 소요일 산출 로직 개선)
 
 ---
 
@@ -28,8 +28,8 @@ progress:
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
+Phase: 04 (business-logic) — COMPLETE (ready for verification)
+Plan: 1 of 1 (complete)
 
 ## Phase Summary
 
@@ -59,6 +59,8 @@ Plan: Not started
 | Phase 02-touch-ux P02 | 3 | 2 tasks | 1 files |
 | Phase 03-ui-redesign P01 | 15 | 2 tasks | 1 files |
 | Phase 03-ui-redesign P02 | 10 | 2 tasks | 1 files |
+| Phase 04-business-logic P01 | 15 | 2 tasks | 1 files |
+| Phase 04-business-logic P01 | 15 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -86,6 +88,9 @@ Plan: Not started
 | skeleton CSS: SECTION:Utilities에 3종 클래스 추가 | JS 없이 CSS 클래스만으로 로딩 UI 구현 가능; @keyframes skeleton-shimmer (03-01) |
 | showInitSkeletons() + renderDashboard() 패턴 | 앱 시작 시 스켈레톤 표시 → loadAll() 완료 → renderDashboard() 즉시 실행으로 첫 탭 렌더링 보장 (03-02) |
 | loadMyRecords() byDate 날짜 그룹화 | byDate 객체로 날짜별 그룹화 + .records-date-header/.records-date-group CSS 패턴 (03-02) |
+| calcLeadTimeStats() 공유 헬퍼 패턴 | renderCapa()와 renderLeadTime() 양쪽의 중복 relatedDates 루프를 단일 헬퍼로 교체 (04-01) |
+| BIZ-03 임계값 3일로 강화 | mainDays < 3 → 소요일 숫자 억제 + "데이터 부족" 표시; 기존 임계값 5일에서 하향 (04-01) |
+| BIZ-04 가중 평균 기본값 | UI에는 가중 평균만 노출; 중앙값은 calcLeadTimeStats() 내부에서 계산만 하고 미노출 (04-01) |
 
 ### Research Flags (carry forward)
 
