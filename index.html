@@ -42,10 +42,10 @@ body{font-family:'Pretendard Variable',-apple-system,BlinkMacSystemFont,sans-ser
 .btn-add{padding:6px 14px;border:1px dashed var(--pri);background:var(--pri-lt);color:var(--pri);border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:inherit;transition:all .15s;touch-action:manipulation}
 .btn-add:hover{background:#bfdbfe}
 .btn{padding:10px 16px;border:none;border-radius:var(--rs);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:6px;touch-action:manipulation}
-.btn-primary{background:var(--pri);color:#fff;box-shadow:0 2px 6px rgba(37,99,235,.3)}
+.btn-primary{position:relative;overflow:hidden;background:var(--pri);color:#fff;box-shadow:0 2px 6px rgba(37,99,235,.3)}
 .btn-primary:hover{background:var(--pri-dk)}
 .btn-primary:disabled{opacity:.5;pointer-events:none}
-.btn-danger{background:var(--danger);color:#fff}
+.btn-danger{position:relative;overflow:hidden;background:var(--danger);color:#fff}
 .btn-danger:hover{background:#b91c1c}
 .btn-outline{background:#fff;color:var(--text-sec);border:1px solid var(--border)}
 .btn-outline:hover{background:#f9fafb}
@@ -108,7 +108,7 @@ input[type=number]{text-align:right}
 .kpi-value{font-size:18px;font-weight:800;letter-spacing:-.02em}
 .kpi-value .unit{font-size:15px;font-weight:400;color:var(--text-muted);margin-left:2px}
 .dash-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
-.dash-table th{padding:6px 8px;font-weight:700;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap;word-break:break-word;overflow-wrap:break-word}
+.dash-table th{padding:6px 8px;font-weight:700;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap;word-break:break-word;overflow-wrap:break-word;scroll-snap-align:start}
 .dash-table td{padding:6px 8px;border-bottom:1px solid var(--border-light);word-break:break-word;overflow-wrap:break-word}
 .dash-table tbody tr:hover{background:#f8f9fb}
 .dash-table .num{text-align:center}.dash-table .num-right{text-align:right}
@@ -166,7 +166,7 @@ input[type=number]{text-align:right}
 .select-md{max-width:240px}
 .header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .date-input-sm{max-width:160px}
-.overflow-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.overflow-x{overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;overscroll-behavior-x:contain}
 .week-label-text{font-size:14px;font-weight:700;min-width:180px;text-align:center}
 .text-xs-muted{font-size:11px;color:var(--text-muted)}
 .fw-700{font-weight:700}
