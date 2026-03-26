@@ -46,7 +46,11 @@ Plans:
   3. 화면을 좌우로 스와이프하면 탭이 전환된다
   4. 가로 스크롤이 필요한 테이블에서 손가락으로 좌우 스와이프하면 자연스럽게 스크롤된다
   5. 모든 인터랙티브 요소의 터치 영역이 44x44px 이상이어서 작은 버튼도 정확히 눌린다
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 02-01-PLAN.md — SECTION:Touch UX CSS 블록 (44px 타겟 + touch-action + :active 피드백 + ripple)
+- [ ] 02-02-PLAN.md — scroll-snap 테이블 스냅 + initSwipeNav() 스와이프 탭 전환
+- [ ] 02-03-PLAN.md — 전체 TOUCH UX 검증 (human-verify checkpoint)
 **UI hint**: yes
 
 ### Phase 3: UI Redesign
@@ -91,7 +95,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-03-25 |
-| 2. Touch UX | 0/0 | Not started | - |
+| 2. Touch UX | 0/3 | Planned | - |
 | 3. UI Redesign | 0/0 | Not started | - |
 | 4. Business Logic | 0/0 | Not started | - |
 | 5. PWA | 0/0 | Not started | - |
@@ -136,4 +140,4 @@ Plans:
 ---
 
 *Roadmap created: 2026-03-25*
-*Last updated: 2026-03-25 Phase 1 planned (3 plans)*
+*Last updated: 2026-03-26 Phase 2 planned (3 plans)*
