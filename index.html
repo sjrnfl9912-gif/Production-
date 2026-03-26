@@ -24,9 +24,10 @@ body{font-family:'Pretendard Variable',-apple-system,BlinkMacSystemFont,sans-ser
 .header-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;letter-spacing:-.02em}
 .header-title svg{width:18px;height:18px}
 .tab-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#fff;border-top:1px solid var(--border);padding:6px 4px;padding-bottom:calc(6px + env(safe-area-inset-bottom));gap:0;border-radius:0;display:flex;justify-content:space-around;box-shadow:0 -2px 10px rgba(0,0,0,.08);will-change:transform;-webkit-transform:translateZ(0);transform:translateZ(0)}
-.tab-btn{flex:1;padding:8px 4px;font-size:10px;color:var(--text-muted);border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2;border:none;cursor:pointer;transition:all .2s;background:0 0;white-space:nowrap;font-family:inherit;touch-action:manipulation}
+.tab-btn{flex:1;padding:8px 4px;font-size:10px;color:var(--text-muted);border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2;border:none;cursor:pointer;transition:all .2s;background:0 0;white-space:nowrap;font-family:inherit;touch-action:manipulation;position:relative}
 .tab-btn:hover{color:var(--pri);background:var(--pri-lt)}
 .tab-btn.active{background:var(--pri-lt);color:var(--pri)}
+.tab-btn.active::before{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:28px;height:3px;background:var(--pri);border-radius:0 0 4px 4px}
 .main{max-width:1200px;margin:0 auto;padding:12px 10px calc(80px + env(safe-area-inset-bottom))}
 .page{display:none;animation:fadeUp .3s ease}.page.active{display:block}
 
@@ -97,7 +98,8 @@ input[type=number]{text-align:right}
 .expired-row td{text-decoration:line-through}
 
 /* ═══ SECTION: Dashboard ═══ */
-.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+@media(min-width:400px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
 .kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:10px;display:flex;align-items:flex-start;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
 .kpi-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .kpi-icon svg{width:18px;height:18px}
@@ -154,7 +156,7 @@ input[type=number]{text-align:right}
 .settings-add{display:flex;gap:8px;margin-top:8px;flex-direction:column}
 .settings-add input{flex:1;width:100%}
 .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1f2937;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s,opacity .3s;opacity:0;z-index:300;white-space:nowrap}
+.toast{position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(80px);background:#1f2937;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .3s,opacity .3s;opacity:0;z-index:300;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
 /* ═══ SECTION: Utilities ═══ */
@@ -257,6 +259,7 @@ input[type=number]{text-align:right}
   .form-footer{padding-top:20px}
   .form-footer .btn{width:auto;justify-content:initial}
   select,input[type=text],input[type=number],input[type=date],input[type=password]{font-size:14px}
+  .toast{bottom:24px}
 }
 </style>
 </head>
