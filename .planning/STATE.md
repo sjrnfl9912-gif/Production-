@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-26T00:19:55.018Z"
+last_updated: "2026-03-26T00:50:08.349Z"
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 9
+  completed_plans: 7
 ---
 
 # Project State: 생산 관리 시스템 리팩토링
 
 **Last updated:** 2026-03-26
-**Session:** Completed 02-02-PLAN.md (Swipe Nav + Scroll Snap)
+**Session:** Completed 03-01-PLAN.md (CSS UI Foundation)
 
 ---
 
@@ -28,8 +28,8 @@ progress:
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 03 (ui-redesign) — EXECUTING
+Plan: 2 of 3
 
 ## Phase Summary
 
@@ -57,6 +57,7 @@ Plan: Not started
 | Phase 01-foundation P03 | 15 | 2 tasks | 1 files |
 | Phase 02-touch-ux P01 | 5 | 1 tasks | 1 files |
 | Phase 02-touch-ux P02 | 3 | 2 tasks | 1 files |
+| Phase 03-ui-redesign P01 | 15 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,9 @@ Plan: Not started
 | iOS :active touchstart 리스너 02-01에 자체 포함 | 02-02 initSwipeNav() 중복 등록 무해 — 독립 실행 보장 (02-01) |
 | scroll-snap-type:x proximity (not mandatory) | proximity는 근처에서만 스냅; mandatory는 모든 스크롤 후 강제 스냅으로 자유 스크롤 방해 (02-02) |
 | initSwipeNav() 기존 .tab-btn.click() 재사용 | 탭 전환 로직 중복 없음 — touchend가 기존 클릭 핸들러에 위임 (02-02) |
+| KPI 2열 기본값 + 400px 3열 복원 | 360px 화면 가독성 확보; @media(min-width:400px) 브레이크포인트로 3열 복원 (03-01) |
+| toast bottom: calc(60px + env(safe-area-inset-bottom)) | 탭바 높이 60px 하드코딩으로 탭바 위 토스트 위치 고정; 데스크탑 오버라이드에 24px 복원 (03-01) |
+| skeleton CSS: SECTION:Utilities에 3종 클래스 추가 | JS 없이 CSS 클래스만으로 로딩 UI 구현 가능; @keyframes skeleton-shimmer (03-01) |
 
 ### Research Flags (carry forward)
 

@@ -65,7 +65,7 @@ Plans:
   5. 내 실적 수정 화면에서 7일 이내 실적을 모바일에서 쉽게 선택하고 수정할 수 있다
 **Plans**: 3 plans
 Plans:
-- [ ] 03-01-PLAN.md — KPI 2열 + 탭바 액티브 인디케이터 + 토스트 위치 + 스켈레톤 CSS 기반
+- [x] 03-01-PLAN.md — KPI 2열 + 탭바 액티브 인디케이터 + 토스트 위치 + 스켈레톤 CSS 기반
 - [ ] 03-02-PLAN.md — showInitSkeletons() + loadMyRecords() 날짜 그룹화 + sticky selector
 - [ ] 03-03-PLAN.md — Phase 3 전체 UI 인수 검증 (human-verify checkpoint)
 **UI hint**: yes
@@ -100,7 +100,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-03-25 |
 | 2. Touch UX | 2/3 | In Progress|  |
-| 3. UI Redesign | 0/3 | Planned | - |
+| 3. UI Redesign | 1/3 | In Progress|  |
 | 4. Business Logic | 0/0 | Not started | - |
 | 5. PWA | 0/0 | Not started | - |
 
