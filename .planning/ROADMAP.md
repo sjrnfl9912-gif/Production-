@@ -67,7 +67,7 @@ Plans:
 Plans:
 - [x] 03-01-PLAN.md — KPI 2열 + 탭바 액티브 인디케이터 + 토스트 위치 + 스켈레톤 CSS 기반
 - [x] 03-02-PLAN.md — showInitSkeletons() + loadMyRecords() 날짜 그룹화 + sticky selector
-- [ ] 03-03-PLAN.md — Phase 3 전체 UI 인수 검증 (human-verify checkpoint)
+- [x] 03-03-PLAN.md — Phase 3 전체 UI 인수 검증 (human-verify checkpoint)
 **UI hint**: yes
 
 ### Phase 4: Business Logic
