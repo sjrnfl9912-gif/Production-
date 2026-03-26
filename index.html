@@ -354,10 +354,6 @@ input[type=number]{text-align:right}
         <div class="card-header"><h2>📊 CAPA 분석</h2></div>
         <div class="overflow-x"><table class="dash-table" id="capaTable"></table></div>
       </div>
-      <div class="card card-inner">
-        <div class="card-header"><h2>⏱️ 메인작업 100대 기준 소요일</h2></div>
-        <div class="overflow-x"><table class="dash-table" id="leadTimeTable"></table></div>
-      </div>
       <div class="dash-grid">
         <div class="card"><div class="card-header"><h2 id="weekSummaryTitle">📦 N월 N주차 총 작업현황</h2></div><div class="scroll-box" id="inventoryArea"></div></div>
         <div class="card"><div class="card-header"><h2>📋 최근 보고 내역</h2></div><div class="scroll-box" id="recentArea"></div></div>
@@ -795,7 +791,7 @@ function renderDashboard(){
   if(!document.getElementById('dailyReportDate').value){
     document.getElementById('dailyReportDate').value=todayStr();
   }
-  renderDailyReport();renderKPI();renderWeekly();renderCapa();renderLeadTime();renderInventory();renderRecent();
+  renderDailyReport();renderKPI();renderWeekly();renderCapa();renderInventory();renderRecent();
 }
 
 function getDailyByWorker(date){
@@ -998,14 +994,23 @@ function calcLeadTimeStats(worker, taskName, allRecords) {
 
   if (mainDays === 0) return { mainDays: 0, weightedAvg: 0, median: 0, perDayValues: [] };
 
-  // BIZ-02: effective output per day = thisQty * (thisQty / totalMainQty)
+  // BIZ-02: "이 품목만 했으면 하루에 몇 개?" 공식
+  // effectiveDays = 하루별 (이 품목 비율) 합계
+  // weightedAvg = 총수량 / effectiveDays
+  const totalQty = activeDays.reduce((s, v) => s + v.thisQty, 0);
+  const effectiveDays = activeDays.reduce((s, v) => {
+    const share = v.totalMainQty > 0 ? v.thisQty / v.totalMainQty : 1;
+    return s + share;
+  }, 0);
+
+  // BIZ-02: per-day full-time equivalent (역산: 이 품목만 했으면 몇 개)
   const perDayValues = activeDays.map(v => {
     const share = v.totalMainQty > 0 ? v.thisQty / v.totalMainQty : 1;
-    return v.thisQty * share;
+    return share > 0 ? v.thisQty / share : v.thisQty;
   });
 
-  // BIZ-04: weighted average
-  const weightedAvg = +(perDayValues.reduce((s, x) => s + x, 0) / mainDays).toFixed(1);
+  // BIZ-04: weighted average = totalQty / effectiveDays
+  const weightedAvg = effectiveDays > 0 ? +(totalQty / effectiveDays).toFixed(1) : 0;
 
   // BIZ-04 (optional median for future use)
   const sorted = [...perDayValues].sort((a, b) => a - b);
@@ -1037,50 +1042,6 @@ function renderCapa(){
   document.getElementById('capaTable').innerHTML=h+'</tbody>';
 }
 
-function renderLeadTime(){
-  const seenLT = new Set();
-  records.forEach(r => { if (r.type === '메인작업') seenLT.add(r.worker + '|' + r.taskName); });
-
-  const items = [...seenLT].map(key => {
-    const [worker, taskName] = key.split('|');
-    const stats = calcLeadTimeStats(worker, taskName, records);
-    const avg = stats.weightedAvg;
-    const daysFor100 = avg > 0 ? +(100 / avg).toFixed(1) : 0;
-    return { worker, taskName, ...stats, avg, daysFor100 };
-  }).sort((a, b) => a.daysFor100 - b.daysFor100);
-
-  // BIZ-03: global reliability banner uses mainDays (not old dataDays)
-  const maxDays = items.length ? Math.max(...items.map(x => x.mainDays)) : 0;
-  let reliabilityMsg = '';
-  if (maxDays < 3) reliabilityMsg = '⚠️ 데이터 부족 — 소요일 산출이 불가능합니다. 최소 3일치 메인작업 데이터가 필요합니다.';
-  else if (maxDays < 5) reliabilityMsg = '⚠️ 데이터 수집 초기 단계입니다. 누적 워킹데이가 쌓일수록 정확도가 올라갑니다.';
-  else if (maxDays < 15) reliabilityMsg = '📈 데이터가 쌓이는 중입니다. 2주 이상 누적 시 신뢰도가 높아집니다.';
-
-  let h=`<thead><tr style="background:var(--warn-lt)"><th style="color:#92400e">담당자</th><th style="color:#92400e">품목</th><th class="num" style="color:#92400e">일평균</th><th class="num" style="color:#92400e">100대 소요</th><th class="num" style="color:#92400e">신뢰도</th></tr></thead><tbody>`;
-  if(!items.length) h+=`<tr><td colspan="5" class="empty-row">데이터 없음</td></tr>`;
-  else items.forEach(it=>{
-    // BIZ-03: suppress soyo-il entirely when mainDays < 3
-    let dayCell, trustCell;
-    if (it.mainDays < 3) {
-      dayCell = `<td class="num" style="color:var(--text-muted)">—</td>`;
-      trustCell = `<td class="num" style="color:var(--danger);font-size:12px">데이터 부족<br><span style="font-size:10px">${it.mainDays}일치</span></td>`;
-    } else {
-      let color = 'var(--grn)';
-      if (it.daysFor100 > 7) color = 'var(--danger)';
-      else if (it.daysFor100 > 4) color = 'var(--warn)';
-      dayCell = `<td class="num" style="font-weight:800;color:${color};font-size:15px">${it.daysFor100}일</td>`;
-      // BIZ-03: 3–4 days shows ●○○; 5–14 shows ●●○; 15+ shows ●●●
-      let trust, trustColor;
-      if (it.mainDays >= 15)     { trust = '●●●'; trustColor = 'var(--grn)'; }
-      else if (it.mainDays >= 5) { trust = '●●○'; trustColor = 'var(--warn)'; }
-      else                       { trust = '●○○'; trustColor = 'var(--danger)'; } // 3–4 days
-      trustCell = `<td class="num" style="color:${trustColor};font-size:12px;white-space:nowrap" title="${it.mainDays}일 데이터">${trust}<div style="font-size:10px;color:var(--text-muted)">${it.mainDays}일치</div></td>`;
-    }
-    h += `<tr><td style="font-weight:600;white-space:nowrap">${it.worker}</td><td style="font-weight:600;color:var(--ind)">${fmtTaskName(it.taskName)}</td><td class="num" style="color:var(--text-muted)">${it.avg}/일</td>${dayCell}${trustCell}</tr>`;
-  });
-  if(reliabilityMsg) h+=`<tr><td colspan="5" style="padding:12px 16px;background:#fffbeb;font-size:12px;color:#92400e;text-align:center">${reliabilityMsg}</td></tr>`;
-  document.getElementById('leadTimeTable').innerHTML=h+'</tbody>';
-}
 
 function renderInventory(){
   const{mon,sun,dates}=getWeekRange(weekOffset);
