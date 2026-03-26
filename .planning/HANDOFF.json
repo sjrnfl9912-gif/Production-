@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-03-26T01:31:09.556Z",
+  "phase": "04",
+  "phase_name": "business-logic",
+  "phase_dir": ".planning/phases/04-business-logic",
+  "plan": 1,
+  "task": 2,
+  "total_tasks": 2,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "Add calcLeadTimeStats() helper above renderCapa()", "status": "done", "commit": "3dd4ce5"},
+    {"id": 2, "name": "Update renderCapa() and renderLeadTime() to use calcLeadTimeStats()", "status": "done", "commit": "961dbe9"}
+  ],
+  "remaining_tasks": [],
+  "blockers": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {"decision": "renderLeadTime() 함수 및 leadTimeTable HTML 카드 제거", "rationale": "소요일 테이블을 UI에서 분리하여 CAPA 테이블에 통합 또는 제거 — Phase 05 준비 중 결정", "phase": "04-to-05 transition"},
+    {"decision": "calcLeadTimeStats() BIZ-02 공식 수정: thisQty*share → thisQty/share (full-time equivalent)", "rationale": "'이 품목만 했으면 하루에 몇 개?' 해석으로 변경 — effectiveDays 기반 가중 평균", "phase": "04-to-05 transition"},
+    {"decision": "config.json에 _auto_chain_active: false 추가", "rationale": "GSD 워크플로우 상태 추적용 플래그", "phase": "04"}
+  ],
+  "uncommitted_files": [
+    "index.html",
+    ".planning/config.json"
+  ],
+  "next_action": "Phase 05 (PWA) discuss 또는 plan 시작. 먼저 uncommitted index.html 변경사항(renderLeadTime 제거 + calcLeadTimeStats 공식 수정)을 커밋할지 결정 필요.",
+  "context_notes": "Phase 04 (BIZ-01~04) 완료 후 Phase 05 준비 중이었음. index.html에 uncommitted 변경이 있음: (1) renderLeadTime() 함수 전체 삭제, (2) leadTimeTable HTML 카드 삭제, (3) calcLeadTimeStats() BIZ-02 공식을 'full-time equivalent' 방식으로 수정 (thisQty/share). 이 변경들은 Phase 04 완료 커밋 이후에 이루어진 것으로, Phase 05 시작 전에 커밋 여부를 결정해야 함."
+}
