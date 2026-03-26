@@ -1018,21 +1018,18 @@ function calcLeadTimeStats(worker, taskName, allRecords) {
 }
 
 function renderCapa(){
-  const st={};
-  records.forEach(r=>{if(r.type!=='메인작업')return;const k=r.worker+'|'+r.taskName;if(!st[k])st[k]={worker:r.worker,taskName:r.taskName,total:0};st[k].total+=r.quantity});
-
-  const cd=Object.values(st).map(s=>{
-    const relatedDates=new Set();
-    records.forEach(r=>{
-      if(r.worker!==s.worker) return;
-      if(r.type==='메인작업'&&r.taskName===s.taskName) relatedDates.add(r.date);
-      if(r.type==='밑작업'&&isRelatedTo(r.relatedMain,s.taskName)) relatedDates.add(r.date);
-      // 공통·제외는 워킹데이에 포함 안 함
-    });
-    const days=relatedDates.size;
-    const avg=days>0?s.total/days:0;
-    return{...s,days,avg:+avg.toFixed(1)};
-  }).sort((a,b)=>a.worker===b.worker?b.total-a.total:a.worker.localeCompare(b.worker));
+  const cd = [];
+  const seenCapa = new Set();
+  records.forEach(r => { if (r.type === '메인작업') seenCapa.add(r.worker + '|' + r.taskName); });
+  seenCapa.forEach(key => {
+    const [worker, taskName] = key.split('|');
+    const total = records
+      .filter(r => r.worker === worker && r.type === '메인작업' && r.taskName === taskName)
+      .reduce((s, r) => s + r.quantity, 0);
+    const { mainDays, weightedAvg } = calcLeadTimeStats(worker, taskName, records);
+    cd.push({ worker, taskName, total, days: mainDays, avg: weightedAvg });
+  });
+  cd.sort((a, b) => a.worker === b.worker ? b.total - a.total : a.worker.localeCompare(b.worker));
 
   let h=`<thead class="capa-thead"><tr><th>담당자</th><th>품목</th><th class="num">누적</th><th class="num">워킹데이</th><th class="num" style="background:rgba(79,70,229,.08)">일평균</th></tr></thead><tbody>`;
   if(!cd.length)h+=`<tr><td colspan="5" class="empty-row">데이터 없음</td></tr>`;
@@ -1041,41 +1038,45 @@ function renderCapa(){
 }
 
 function renderLeadTime(){
-  const st={};
-  records.forEach(r=>{if(r.type!=='메인작업')return;const k=r.worker+'|'+r.taskName;if(!st[k])st[k]={worker:r.worker,taskName:r.taskName,total:0};st[k].total+=r.quantity});
+  const seenLT = new Set();
+  records.forEach(r => { if (r.type === '메인작업') seenLT.add(r.worker + '|' + r.taskName); });
 
-  const items=Object.values(st).map(s=>{
-    const relatedDates=new Set();
-    records.forEach(r=>{
-      if(r.worker!==s.worker) return;
-      if(r.type==='메인작업'&&r.taskName===s.taskName) relatedDates.add(r.date);
-      if(r.type==='밑작업'&&isRelatedTo(r.relatedMain,s.taskName)) relatedDates.add(r.date);
-      // 공통·제외는 워킹데이에 포함 안 함
-    });
-    const days=relatedDates.size;
-    const avg=days>0?s.total/days:0;
-    const daysFor100=avg>0?100/avg:0;
-    return{worker:s.worker,taskName:s.taskName,avg:+avg.toFixed(1),daysFor100:+daysFor100.toFixed(1),dataDays:days};
-  }).sort((a,b)=>a.daysFor100-b.daysFor100);
+  const items = [...seenLT].map(key => {
+    const [worker, taskName] = key.split('|');
+    const stats = calcLeadTimeStats(worker, taskName, records);
+    const avg = stats.weightedAvg;
+    const daysFor100 = avg > 0 ? +(100 / avg).toFixed(1) : 0;
+    return { worker, taskName, ...stats, avg, daysFor100 };
+  }).sort((a, b) => a.daysFor100 - b.daysFor100);
 
-  // 전체 데이터 신뢰도 판단
-  const maxDays=items.length?Math.max(...items.map(x=>x.dataDays)):0;
-  let reliabilityMsg='';
-  if(maxDays<5) reliabilityMsg='⚠️ 데이터 수집 초기 단계입니다. 누적 워킹데이가 쌓일수록 정확도가 올라갑니다.';
-  else if(maxDays<15) reliabilityMsg='📈 데이터가 쌓이는 중입니다. 2주 이상 누적 시 신뢰도가 높아집니다.';
+  // BIZ-03: global reliability banner uses mainDays (not old dataDays)
+  const maxDays = items.length ? Math.max(...items.map(x => x.mainDays)) : 0;
+  let reliabilityMsg = '';
+  if (maxDays < 3) reliabilityMsg = '⚠️ 데이터 부족 — 소요일 산출이 불가능합니다. 최소 3일치 메인작업 데이터가 필요합니다.';
+  else if (maxDays < 5) reliabilityMsg = '⚠️ 데이터 수집 초기 단계입니다. 누적 워킹데이가 쌓일수록 정확도가 올라갑니다.';
+  else if (maxDays < 15) reliabilityMsg = '📈 데이터가 쌓이는 중입니다. 2주 이상 누적 시 신뢰도가 높아집니다.';
 
   let h=`<thead><tr style="background:var(--warn-lt)"><th style="color:#92400e">담당자</th><th style="color:#92400e">품목</th><th class="num" style="color:#92400e">일평균</th><th class="num" style="color:#92400e">100대 소요</th><th class="num" style="color:#92400e">신뢰도</th></tr></thead><tbody>`;
   if(!items.length) h+=`<tr><td colspan="5" class="empty-row">데이터 없음</td></tr>`;
   else items.forEach(it=>{
-    let color='var(--grn)';
-    if(it.daysFor100>7) color='var(--danger)';
-    else if(it.daysFor100>4) color='var(--warn)';
-    // 신뢰도 표시: 워킹데이 기반
-    let trust,trustColor;
-    if(it.dataDays>=15){trust='●●●';trustColor='var(--grn)'}
-    else if(it.dataDays>=5){trust='●●○';trustColor='var(--warn)'}
-    else{trust='●○○';trustColor='var(--danger)'}
-    h+=`<tr><td style="font-weight:600;white-space:nowrap">${it.worker}</td><td style="font-weight:600;color:var(--ind)">${fmtTaskName(it.taskName)}</td><td class="num" style="color:var(--text-muted)">${it.avg}/일</td><td class="num" style="font-weight:800;color:${color};font-size:15px">${it.daysFor100}일</td><td class="num" style="color:${trustColor};font-size:12px;white-space:nowrap" title="${it.dataDays}일 데이터">${trust}<div style="font-size:10px;color:var(--text-muted)">${it.dataDays}일치</div></td></tr>`;
+    // BIZ-03: suppress soyo-il entirely when mainDays < 3
+    let dayCell, trustCell;
+    if (it.mainDays < 3) {
+      dayCell = `<td class="num" style="color:var(--text-muted)">—</td>`;
+      trustCell = `<td class="num" style="color:var(--danger);font-size:12px">데이터 부족<br><span style="font-size:10px">${it.mainDays}일치</span></td>`;
+    } else {
+      let color = 'var(--grn)';
+      if (it.daysFor100 > 7) color = 'var(--danger)';
+      else if (it.daysFor100 > 4) color = 'var(--warn)';
+      dayCell = `<td class="num" style="font-weight:800;color:${color};font-size:15px">${it.daysFor100}일</td>`;
+      // BIZ-03: 3–4 days shows ●○○; 5–14 shows ●●○; 15+ shows ●●●
+      let trust, trustColor;
+      if (it.mainDays >= 15)     { trust = '●●●'; trustColor = 'var(--grn)'; }
+      else if (it.mainDays >= 5) { trust = '●●○'; trustColor = 'var(--warn)'; }
+      else                       { trust = '●○○'; trustColor = 'var(--danger)'; } // 3–4 days
+      trustCell = `<td class="num" style="color:${trustColor};font-size:12px;white-space:nowrap" title="${it.mainDays}일 데이터">${trust}<div style="font-size:10px;color:var(--text-muted)">${it.mainDays}일치</div></td>`;
+    }
+    h += `<tr><td style="font-weight:600;white-space:nowrap">${it.worker}</td><td style="font-weight:600;color:var(--ind)">${fmtTaskName(it.taskName)}</td><td class="num" style="color:var(--text-muted)">${it.avg}/일</td>${dayCell}${trustCell}</tr>`;
   });
   if(reliabilityMsg) h+=`<tr><td colspan="5" style="padding:12px 16px;background:#fffbeb;font-size:12px;color:#92400e;text-align:center">${reliabilityMsg}</td></tr>`;
   document.getElementById('leadTimeTable').innerHTML=h+'</tbody>';
