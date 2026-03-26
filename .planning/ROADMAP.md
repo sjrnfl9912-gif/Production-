@@ -48,7 +48,7 @@ Plans:
   5. 모든 인터랙티브 요소의 터치 영역이 44x44px 이상이어서 작은 버튼도 정확히 눌린다
 **Plans**: 3 plans
 Plans:
-- [ ] 02-01-PLAN.md — SECTION:Touch UX CSS 블록 (44px 타겟 + touch-action + :active 피드백 + ripple)
+- [x] 02-01-PLAN.md — SECTION:Touch UX CSS 블록 (44px 타겟 + touch-action + :active 피드백 + ripple)
 - [ ] 02-02-PLAN.md — scroll-snap 테이블 스냅 + initSwipeNav() 스와이프 탭 전환
 - [ ] 02-03-PLAN.md — 전체 TOUCH UX 검증 (human-verify checkpoint)
 **UI hint**: yes

@@ -17,9 +17,9 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### Touch UX
 
-- [ ] **TOUCH-01**: 모든 인터랙티브 요소가 최소 44x44px 터치 타겟을 보장한다
-- [ ] **TOUCH-02**: `touch-action: manipulation`으로 300ms 터치 지연이 제거된다
-- [ ] **TOUCH-03**: 버튼 탭 시 시각적 터치 피드백(press/ripple)이 제공된다
+- [x] **TOUCH-01**: 모든 인터랙티브 요소가 최소 44x44px 터치 타겟을 보장한다
+- [x] **TOUCH-02**: `touch-action: manipulation`으로 300ms 터치 지연이 제거된다
+- [x] **TOUCH-03**: 버튼 탭 시 시각적 터치 피드백(press/ripple)이 제공된다
 - [ ] **TOUCH-04**: 탭 간 스와이프로 페이지 전환이 가능하다
 - [ ] **TOUCH-05**: 테이블 가로 스크롤이 CSS `scroll-snap`으로 자연스럽게 동작한다
 
@@ -91,9 +91,9 @@ Deferred to future release.
 | VIEW-03 | Phase 1 | Complete |
 | VIEW-04 | Phase 1 | Complete |
 | VIEW-05 | Phase 1 | Complete |
-| TOUCH-01 | Phase 2 | Pending |
-| TOUCH-02 | Phase 2 | Pending |
-| TOUCH-03 | Phase 2 | Pending |
+| TOUCH-01 | Phase 2 | Complete |
+| TOUCH-02 | Phase 2 | Complete |
+| TOUCH-03 | Phase 2 | Complete |
 | TOUCH-04 | Phase 2 | Pending |
 | TOUCH-05 | Phase 2 | Pending |
 | CODE-01 | Phase 1 | Complete |

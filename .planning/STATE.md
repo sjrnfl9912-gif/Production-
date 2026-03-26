@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-03-25T08:54:43.260Z"
+last_updated: "2026-03-26T00:16:20.553Z"
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 6
+  completed_plans: 4
 ---
 
 # Project State: 생산 관리 시스템 리팩토링
 
-**Last updated:** 2026-03-25
-**Session:** Checkpoint 01-03 Task 3 — awaiting human-verify (Tasks 1+2 committed)
+**Last updated:** 2026-03-26
+**Session:** Completed 02-01-PLAN.md (Touch UX CSS 블록)
 
 ---
 
@@ -28,8 +28,8 @@ progress:
 
 ## Current Position
 
-Phase: 01 (foundation) — AWAITING HUMAN VERIFY (checkpoint at 01-03 Task 3)
-Plan: 3 of 3 (Tasks 1+2 complete, Task 3 human-verify pending)
+Phase: 02 (touch-ux) — EXECUTING
+Plan: 2 of 3
 
 ## Phase Summary
 
@@ -55,6 +55,7 @@ Plan: 3 of 3 (Tasks 1+2 complete, Task 3 human-verify pending)
 | Phase 01-foundation P02 | 2 | 2 tasks | 1 files |
 | Phase 01-foundation P01 | 10 | 2 tasks | 1 files |
 | Phase 01-foundation P03 | 15 | 2 tasks | 1 files |
+| Phase 02-touch-ux P01 | 5 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,8 @@ Plan: 3 of 3 (Tasks 1+2 complete, Task 3 human-verify pending)
 | Phase 2 depends on Phase 1 | 터치 타겟/스크롤 수정은 dvh 뷰포트 기반이 정확해야 검증 가능 |
 | syncViewportHeight on both resize+scroll | scroll event fires on iOS when keyboard pans the viewport independently — needed for --vh accuracy |
 | isComposingEvent() uses keyCode===229 fallback | legacy Android browsers don't support e.isComposing; keyCode 229 is the IME composition marker |
+| ripple ::after는 @media(pointer:coarse) 밖에 배치 | 데스크탑 hover ripple도 무해하며 조건 없이 동작해야 함 (02-01) |
+| iOS :active touchstart 리스너 02-01에 자체 포함 | 02-02 initSwipeNav() 중복 등록 무해 — 독립 실행 보장 (02-01) |
 
 ### Research Flags (carry forward)
 
