@@ -1213,10 +1213,20 @@ function loadAdminRecords(){
 }
 
 // ═══════════ INIT ═══════════
+function showInitSkeletons(){
+  const skLine=(cls='')=>`<div class="skeleton skeleton-line ${cls}"></div>`;
+  const skCard=(n=3)=>`<div class="skeleton-card">${skLine('short')}${skLine('medium')}${Array.from({length:n},()=>skLine('full')).join('')}</div>`;
+  document.getElementById('kpiArea').innerHTML=skCard(1)+skCard(1)+skCard(1);
+  document.getElementById('weeklyArea').innerHTML=skCard(4);
+  document.getElementById('dailyReportArea').innerHTML=skCard(5);
+}
+
 document.addEventListener('DOMContentLoaded',async()=>{
   document.getElementById('dateInput').value=todayStr();
   createPinInputs('adminPinWrap');
+  showInitSkeletons();
   await loadAll();
+  renderDashboard();
   addRow();
   initKeyboardHandler();
 
