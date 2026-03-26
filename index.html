@@ -96,6 +96,10 @@ input[type=number]{text-align:right}
 .edit-table tbody tr:hover{background:#f8f9fb}
 .expired-row{opacity:.5}
 .expired-row td{text-decoration:line-through}
+.records-date-header{font-size:12px;font-weight:700;color:var(--text-sec);padding:10px 4px 6px;display:flex;align-items:center;gap:8px}
+.records-date-header::after{content:'';flex:1;height:1px;background:var(--border-light)}
+.records-date-group{margin-bottom:16px}
+.my-records-header{position:sticky;top:0;background:var(--surface);z-index:10;padding:8px 0 10px;border-bottom:1px solid var(--border-light);margin-bottom:12px}
 
 /* ═══ SECTION: Dashboard ═══ */
 .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
@@ -316,7 +320,7 @@ input[type=number]{text-align:right}
         <h2>✏️ 내 실적 수정 <span class="subtitle-note">(7일 이내 수정 가능)</span></h2>
       </div>
       <div class="card-body">
-        <div class="field-group"><label>👤 담당자 선택</label><select id="myWorkerSelect" onchange="loadMyRecords()" class="select-md"><option value="">선택</option></select></div>
+        <div class="field-group my-records-header"><label>👤 담당자 선택</label><select id="myWorkerSelect" onchange="loadMyRecords()" class="select-md"><option value="">선택</option></select></div>
         <div id="myRecordsArea"></div>
       </div>
     </div>
@@ -674,15 +678,24 @@ function loadMyRecords(){
   if(!w){area.innerHTML='<div class="empty-row">작업자를 선택해주세요.</div>';return}
   const mine=records.filter(r=>r.worker===w).sort((a,b)=>new Date(b.date)-new Date(a.date));
   if(!mine.length){area.innerHTML='<div class="empty-row">데이터가 없습니다.</div>';return}
-  let h=`<table class="edit-table"><thead><tr><th>날짜</th><th>구분</th><th>작업명</th><th>수량</th><th>비고</th><th style="width:90px">관리</th></tr></thead><tbody>`;
-  mine.forEach(r=>{
-    const ok=isWithin7Days(r.date),cls=ok?'':'expired-row';
-    const badge=r.type==='메인작업'?'badge-main':r.type==='밑작업'?'badge-sub':'badge-etc';
-    h+=`<tr class="${cls}"><td data-label="날짜">${r.date}</td><td data-label="구분"><span class="badge ${badge}">${r.type}</span></td>
-      <td data-label="작업명">${r.taskName}</td><td data-label="수량" class="fw-700">${r.quantity} EA</td><td data-label="비고" class="text-muted">${r.note||'-'}</td>
-      <td>${ok?`<button class="btn btn-outline btn-sm" onclick="openEditModal(${r.id},false)">수정</button> <button class="btn btn-danger btn-sm" onclick="deleteRecord(${r.id},false)">삭제</button>`:'<span class="text-xs-muted">기한 만료</span>'}</td></tr>`;
+  const byDate={};
+  mine.forEach(r=>{if(!byDate[r.date])byDate[r.date]=[];byDate[r.date].push(r)});
+  let h='';
+  Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).forEach(date=>{
+    const ok=isWithin7Days(date);
+    h+=`<div class="records-date-group">`;
+    h+=`<div class="records-date-header">${fmtDate(date)}${!ok?' <span class="text-xs-muted">(수정 불가)</span>':''}</div>`;
+    h+=`<table class="edit-table"><thead><tr><th>구분</th><th>작업명</th><th>수량</th><th>비고</th><th style="width:90px">관리</th></tr></thead><tbody>`;
+    byDate[date].forEach(r=>{
+      const badge=r.type==='메인작업'?'badge-main':r.type==='밑작업'?'badge-sub':'badge-etc';
+      h+=`<tr><td data-label="구분"><span class="badge ${badge}">${r.type}</span></td>
+        <td data-label="작업명">${r.taskName}</td><td data-label="수량" class="fw-700">${r.quantity} EA</td>
+        <td data-label="비고" class="text-muted">${r.note||'-'}</td>
+        <td>${ok?`<button class="btn btn-outline btn-sm" onclick="openEditModal(${r.id},false)">수정</button> <button class="btn btn-danger btn-sm" onclick="deleteRecord(${r.id},false)">삭제</button>`:'<span class="text-xs-muted">기한 만료</span>'}</td></tr>`;
+    });
+    h+='</tbody></table></div>';
   });
-  h+='</tbody></table>';area.innerHTML=h;
+  area.innerHTML=h;
 }
 
 // ═══════════ EDIT MODAL ═══════════
