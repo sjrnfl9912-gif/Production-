@@ -109,7 +109,7 @@ input[type=number]{text-align:right}
 .kpi-label{font-size:11px;color:var(--text-muted);font-weight:500;margin-bottom:2px}
 .kpi-value{font-size:18px;font-weight:800;letter-spacing:-.02em}
 .kpi-value .unit{font-size:15px;font-weight:400;color:var(--text-muted);margin-left:2px}
-.dash-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.dash-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:auto}
 .dash-table th{padding:6px 8px;font-weight:700;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap;word-break:break-word;overflow-wrap:break-word;scroll-snap-align:start}
 .dash-table td{padding:6px 8px;border-bottom:1px solid var(--border-light);word-break:break-word;overflow-wrap:break-word}
 .dash-table tbody tr:hover{background:#f8f9fb}
@@ -176,6 +176,11 @@ input[type=number]{text-align:right}
 .hidden{display:none}
 .text-muted{color:var(--text-muted)}
 .full-height{height:calc(var(--vh,1vh)*100)}
+.skeleton{background:var(--skeleton-base,#e9eaec);border-radius:6px;overflow:hidden;position:relative}
+.skeleton::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.5) 50%,transparent 100%);animation:skeleton-shimmer 1.4s ease infinite}
+.skeleton-line{height:14px;margin-bottom:8px;border-radius:4px}
+.skeleton-line.short{width:40%}.skeleton-line.medium{width:70%}.skeleton-line.full{width:100%}
+.skeleton-card{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--r);padding:14px;margin-bottom:10px}
 
 /* ═══ SECTION: Animations ═══ */
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -183,6 +188,7 @@ input[type=number]{text-align:right}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes skeleton-shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 
 /* ═══ SECTION: Touch UX ═══ */
 /* TOUCH-01: 최소 44x44px 터치 타겟 (터치 장치에서만 적용) */
@@ -794,7 +800,7 @@ function renderDailyReport(){
   const workerKeys=Object.keys(byWorker).sort();
   if(!workerKeys.length){area.innerHTML='<div class="empty-row">해당일 데이터 없음</div>';return}
 
-  let h=`<table class="dash-table"><thead><tr><th style="width:100px">담당자</th><th style="width:70px">구분</th><th>작업명</th><th class="num" style="width:80px">수량</th><th>비고</th></tr></thead><tbody>`;
+  let h=`<table class="dash-table"><thead><tr><th>담당자</th><th>구분</th><th>작업명</th><th class="num">수량</th><th>비고</th></tr></thead><tbody>`;
   workerKeys.forEach(worker=>{
     const tasks=byWorker[worker];
     const workerTotal=tasks.reduce((s,r)=>s+r.quantity,0);
