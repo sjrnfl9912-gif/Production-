@@ -49,7 +49,7 @@ Plans:
 **Plans**: 3 plans
 Plans:
 - [x] 02-01-PLAN.md — SECTION:Touch UX CSS 블록 (44px 타겟 + touch-action + :active 피드백 + ripple)
-- [ ] 02-02-PLAN.md — scroll-snap 테이블 스냅 + initSwipeNav() 스와이프 탭 전환
+- [x] 02-02-PLAN.md — scroll-snap 테이블 스냅 + initSwipeNav() 스와이프 탭 전환
 - [ ] 02-03-PLAN.md — 전체 TOUCH UX 검증 (human-verify checkpoint)
 **UI hint**: yes
 
@@ -95,7 +95,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-03-25 |
-| 2. Touch UX | 0/3 | Planned | - |
+| 2. Touch UX | 2/3 | In Progress|  |
 | 3. UI Redesign | 0/0 | Not started | - |
 | 4. Business Logic | 0/0 | Not started | - |
 | 5. PWA | 0/0 | Not started | - |
