@@ -48,10 +48,10 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### PWA
 
-- [ ] **PWA-01**: `manifest.json`이 추가되어 홈 화면 추가 시 앱처럼 표시된다
-- [ ] **PWA-02**: Service Worker가 정적 자산을 캐싱하여 재방문 시 빠르게 로딩된다
-- [ ] **PWA-03**: 카카오톡 웹뷰 감지 시 Service Worker 등록을 스킵하여 무한 새로고침을 방지한다
-- [ ] **PWA-04**: 오프라인 상태에서 기본 UI가 표시되고 네트워크 복구 시 자동 재연결된다
+- [x] **PWA-01**: `manifest.json`이 추가되어 홈 화면 추가 시 앱처럼 표시된다
+- [x] **PWA-02**: Service Worker가 정적 자산을 캐싱하여 재방문 시 빠르게 로딩된다
+- [x] **PWA-03**: 카카오톡 웹뷰 감지 시 Service Worker 등록을 스킵하여 무한 새로고침을 방지한다
+- [x] **PWA-04**: 오프라인 상태에서 기본 UI가 표시되고 네트워크 복구 시 자동 재연결된다
 
 ## v2 Requirements
 
@@ -110,10 +110,10 @@ Deferred to future release.
 | BIZ-02 | Phase 4 | Complete |
 | BIZ-03 | Phase 4 | Complete |
 | BIZ-04 | Phase 4 | Complete |
-| PWA-01 | Phase 5 | Pending |
-| PWA-02 | Phase 5 | Pending |
-| PWA-03 | Phase 5 | Pending |
-| PWA-04 | Phase 5 | Pending |
+| PWA-01 | Phase 5 | Complete |
+| PWA-02 | Phase 5 | Complete |
+| PWA-03 | Phase 5 | Complete |
+| PWA-04 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 28 total

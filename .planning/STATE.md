@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-26T02:29:00.572Z"
+stopped_at: "Completed 05-01-PLAN.md (PWA layer: manifest, SW, KakaoTalk guard, offline banner)"
+last_updated: "2026-03-26T03:04:03.311Z"
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 10
-  completed_plans: 10
+  total_plans: 12
+  completed_plans: 11
 ---
 
 # Project State: 생산 관리 시스템 리팩토링
@@ -29,8 +29,8 @@ progress:
 
 ## Current Position
 
-Phase: 04 (business-logic) — COMPLETE (ready for verification)
-Plan: 1 of 1 (complete)
+Phase: 05 (pwa) — EXECUTING
+Plan: 2 of 2
 
 ## Phase Summary
 
@@ -62,6 +62,7 @@ Plan: 1 of 1 (complete)
 | Phase 03-ui-redesign P02 | 10 | 2 tasks | 1 files |
 | Phase 04-business-logic P01 | 15 | 2 tasks | 1 files |
 | Phase 04-business-logic P01 | 15 | 2 tasks | 1 files |
+| Phase 05-pwa P01 | 2 | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -92,6 +93,9 @@ Plan: 1 of 1 (complete)
 | calcLeadTimeStats() 공유 헬퍼 패턴 | renderCapa()와 renderLeadTime() 양쪽의 중복 relatedDates 루프를 단일 헬퍼로 교체 (04-01) |
 | BIZ-03 임계값 3일로 강화 | mainDays < 3 → 소요일 숫자 억제 + "데이터 부족" 표시; 기존 임계값 5일에서 하향 (04-01) |
 | BIZ-04 가중 평균 기본값 | UI에는 가중 평균만 노출; 중앙값은 calcLeadTimeStats() 내부에서 계산만 하고 미노출 (04-01) |
+| SW cache: NetworkFirst(5s) for index.html | 온라인 시 최신 버전 제공, 오프라인 시 캐시 폴백; CacheFirst는 단일 파일 앱 배포 후 업데이트 지연 유발 (05-01) |
+| SW cache: NetworkOnly for Supabase API | 생산 데이터 절대 캐시 금지 (D-03); 항상 최신 API 응답 필요 (05-01) |
+| KakaoTalk UA guard: /KAKAOTALK/i 감지 후 SW 등록 스킵 | KakaoTalk WebView에서 SW 등록 시 무한 새로고침 방지 (D-07); 실기기 검증 필요 (05-01) |
 
 ### Research Flags (carry forward)
 
@@ -119,9 +123,9 @@ None currently.
 
 ## Session Continuity
 
-**Last session:** 2026-03-26T02:29:00.562Z
-**Stopped at:** Phase 5 context gathered
-**Resume file:** .planning/phases/05-pwa/05-CONTEXT.md
+**Last session:** 2026-03-26T03:04:03.307Z
+**Stopped at:** Completed 05-01-PLAN.md (PWA layer: manifest, SW, KakaoTalk guard, offline banner)
+**Resume file:** None
 
 **Files to know:**
 

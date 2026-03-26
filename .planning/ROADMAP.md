@@ -94,7 +94,7 @@ Plans:
   4. 네트워크가 끊긴 상태에서 앱을 열면 기본 UI가 표시되고 네트워크 복구 시 자동으로 재연결된다
 **Plans**: 2 plans
 Plans:
-- [ ] 05-01-PLAN.md — manifest.json + sw.js + 아이콘 생성 + index.html PWA 통합 (KakaoTalk 가드 + 오프라인 배너)
+- [x] 05-01-PLAN.md — manifest.json + sw.js + 아이콘 생성 + index.html PWA 통합 (KakaoTalk 가드 + 오프라인 배너)
 - [ ] 05-02-PLAN.md — PWA 전체 기능 인수 검증 (human-verify checkpoint)
 
 ---
@@ -107,7 +107,7 @@ Plans:
 | 2. Touch UX | 2/3 | In Progress|  |
 | 3. UI Redesign | 2/3 | In Progress|  |
 | 4. Business Logic | 1/1 | Complete   | 2026-03-26 |
-| 5. PWA | 0/2 | Not started | - |
+| 5. PWA | 1/2 | In Progress|  |
 
 ---
 
