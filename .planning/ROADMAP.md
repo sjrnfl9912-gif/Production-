@@ -63,7 +63,11 @@ Plans:
   3. 화면 하단 탭바가 안전 영역(safe-area) 아래로 숨지 않고 홈 버튼/네비 바 위에 표시된다
   4. 데이터를 불러오는 동안 빈 화면 대신 스켈레톤/스피너가 표시된다
   5. 내 실적 수정 화면에서 7일 이내 실적을 모바일에서 쉽게 선택하고 수정할 수 있다
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 03-01-PLAN.md — KPI 2열 + 탭바 액티브 인디케이터 + 토스트 위치 + 스켈레톤 CSS 기반
+- [ ] 03-02-PLAN.md — showInitSkeletons() + loadMyRecords() 날짜 그룹화 + sticky selector
+- [ ] 03-03-PLAN.md — Phase 3 전체 UI 인수 검증 (human-verify checkpoint)
 **UI hint**: yes
 
 ### Phase 4: Business Logic
@@ -96,7 +100,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Foundation | 3/3 | Complete   | 2026-03-25 |
 | 2. Touch UX | 2/3 | In Progress|  |
-| 3. UI Redesign | 0/0 | Not started | - |
+| 3. UI Redesign | 0/3 | Planned | - |
 | 4. Business Logic | 0/0 | Not started | - |
 | 5. PWA | 0/0 | Not started | - |
 
@@ -140,4 +144,4 @@ Plans:
 ---
 
 *Roadmap created: 2026-03-25*
-*Last updated: 2026-03-26 Phase 2 planned (3 plans)*
+*Last updated: 2026-03-26 Phase 3 planned (3 plans)*
