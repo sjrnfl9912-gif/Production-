@@ -33,11 +33,11 @@ Requirements for this milestone. Each maps to roadmap phases.
 
 ### UI Redesign
 
-- [ ] **UI-01**: 실적 입력 폼이 모바일 카드형 레이아웃으로 재설계된다
+- [x] **UI-01**: 실적 입력 폼이 모바일 카드형 레이아웃으로 재설계된다
 - [x] **UI-02**: 대시보드 KPI/테이블이 모바일 화면에 최적화된다
 - [x] **UI-03**: 하단 탭바가 카카오톡 웹뷰 safe-area를 고려하여 개선된다
 - [x] **UI-04**: 데이터 로딩 중 스켈레톤/스피너 UI가 표시된다
-- [ ] **UI-05**: 내 실적 수정 화면이 모바일에서 사용하기 편하게 개선된다
+- [x] **UI-05**: 내 실적 수정 화면이 모바일에서 사용하기 편하게 개선된다
 
 ### Business Logic
 
@@ -101,11 +101,11 @@ Deferred to future release.
 | CODE-03 | Phase 1 | Complete |
 | CODE-04 | Phase 1 | Complete |
 | CODE-05 | Phase 1 | Complete |
-| UI-01 | Phase 3 | Pending |
+| UI-01 | Phase 3 | Complete |
 | UI-02 | Phase 3 | Complete |
 | UI-03 | Phase 3 | Complete |
 | UI-04 | Phase 3 | Complete |
-| UI-05 | Phase 3 | Pending |
+| UI-05 | Phase 3 | Complete |
 | BIZ-01 | Phase 4 | Pending |
 | BIZ-02 | Phase 4 | Pending |
 | BIZ-03 | Phase 4 | Pending |
