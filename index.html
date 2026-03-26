@@ -182,6 +182,23 @@ input[type=number]{text-align:right}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ═══ SECTION: Touch UX ═══ */
+/* TOUCH-01: 최소 44x44px 터치 타겟 (터치 장치에서만 적용) */
+/* TOUCH-02: touch-action on inputs (버튼류는 이미 적용됨) */
+/* TOUCH-03: 시각적 터치 피드백 — scale + opacity + ripple */
+@media (pointer: coarse) {
+  .btn-icon{width:44px;height:44px}
+  .week-nav-btn{width:44px;height:44px}
+  .btn-sm{padding:10px 14px;min-height:44px}
+  .settings-item .btn{padding:8px 12px;min-height:44px}
+  input,select,textarea{touch-action:manipulation}
+  .btn:active,.btn-add:active,.btn-icon:active,.week-nav-btn:active{transform:scale(0.94);opacity:0.82;transition:transform 0.05s,opacity 0.05s}
+  .tab-btn:active{background:var(--pri-lt);color:var(--pri)}
+}
+/* TOUCH-03: Ripple — btn-primary / btn-danger CTA 버튼 */
+.btn-primary::after,.btn-danger::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.25);opacity:0;transform:scale(0);border-radius:inherit;pointer-events:none;transition:transform 0.3s,opacity 0.3s}
+.btn-primary:active::after,.btn-danger:active::after{transform:scale(1);opacity:1;transition:none}
+
 /* ═══ SECTION: Desktop Override ═══ */
 @media (min-width: 769px) {
   .header{padding:0 24px;height:64px}
@@ -512,6 +529,37 @@ document.getElementById('tabNav').addEventListener('click',e=>{
   if(btn.dataset.tab==='dashboard') renderDashboard();
   if(btn.dataset.tab==='admin'&&adminUnlocked) renderAdminSettings();
 });
+
+// ═══════════ SWIPE TAB NAVIGATION (TOUCH-04) ═══════════
+(function initSwipeNav(){
+  const TAB_ORDER=['input','myrecords','dashboard','admin'];
+  const MIN_X=60;  // px: 스와이프로 인정하는 최소 수평 이동
+  const MAX_Y=80;  // px: 이 이상 수직 이동이면 스크롤로 간주, 스와이프 취소
+  let sx=0,sy=0;
+
+  // passive:true — scroll을 절대 막지 않음 (RESEARCH.md Pitfall 1)
+  // 이 touchstart 리스너는 iOS :active 즉시 발화도 보장함 (RESEARCH.md Pitfall 2)
+  document.addEventListener('touchstart',function(e){
+    sx=e.touches[0].clientX;
+    sy=e.touches[0].clientY;
+  },{passive:true});
+
+  document.addEventListener('touchend',function(e){
+    // PIN 입력 중 스와이프 무시 (RESEARCH.md Pitfall 5)
+    if(document.activeElement&&document.activeElement.classList.contains('pin-digit'))return;
+    const dx=e.changedTouches[0].clientX-sx;
+    const dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)<MIN_X)return;    // 수평 이동 부족
+    if(Math.abs(dy)>MAX_Y)return;    // 수직 스크롤로 판단
+    const dir=dx<0?1:-1;             // 왼쪽 스와이프=다음 탭, 오른쪽=이전 탭
+    const cur=document.querySelector('.tab-btn.active')?.dataset.tab;
+    const ci=TAB_ORDER.indexOf(cur);
+    const ni=ci+dir;
+    if(ni<0||ni>=TAB_ORDER.length)return;
+    // 기존 탭 클릭 핸들러 재사용 — 새 탭 전환 로직 없음
+    document.querySelector(`.tab-btn[data-tab="${TAB_ORDER[ni]}"]`)?.click();
+  },{passive:true});
+})();
 
 // ═══════════ PIN SYSTEM ═══════════
 function createPinInputs(wrapperId){
@@ -1162,6 +1210,9 @@ document.addEventListener('DOMContentLoaded',async()=>{
   await loadAll();
   addRow();
   initKeyboardHandler();
+
+  // iOS :active 즉시 발화 보장 (TOUCH-03) — passive touchstart 리스너 등록
+  document.addEventListener('touchstart',function(){},{passive:true});
 
   // ═══ 한글 IME 가드: Enter 키로 폼 제출 방지 ═══
   document.querySelectorAll('#entryForm input[type="text"],#entryForm input[type="number"]').forEach(inp=>{
