@@ -977,6 +977,46 @@ function isRelatedTo(relatedMain,mainTaskName){
   return relatedMain.split(',').some(t=>t.trim()===mainTaskName);
 }
 
+// SECTION:Business Logic Helpers — calcLeadTimeStats
+// BIZ-01: only dates where THIS worker performed THIS 메인작업 directly
+// BIZ-02: per-day contribution weighted by proportion of that day's main-task output
+// BIZ-04: weighted average + optional median
+function calcLeadTimeStats(worker, taskName, allRecords) {
+  const mainDayMap = {}; // "YYYY-MM-DD" -> { thisQty, totalMainQty }
+
+  allRecords.forEach(r => {
+    if (r.worker !== worker || r.type !== '메인작업') return;
+    const d = r.date;
+    if (!mainDayMap[d]) mainDayMap[d] = { thisQty: 0, totalMainQty: 0 };
+    mainDayMap[d].totalMainQty += r.quantity; // all main tasks this worker this day
+    if (r.taskName === taskName) mainDayMap[d].thisQty += r.quantity;
+  });
+
+  // BIZ-01: only days where target item was actually worked
+  const activeDays = Object.values(mainDayMap).filter(v => v.thisQty > 0);
+  const mainDays = activeDays.length;
+
+  if (mainDays === 0) return { mainDays: 0, weightedAvg: 0, median: 0, perDayValues: [] };
+
+  // BIZ-02: effective output per day = thisQty * (thisQty / totalMainQty)
+  const perDayValues = activeDays.map(v => {
+    const share = v.totalMainQty > 0 ? v.thisQty / v.totalMainQty : 1;
+    return v.thisQty * share;
+  });
+
+  // BIZ-04: weighted average
+  const weightedAvg = +(perDayValues.reduce((s, x) => s + x, 0) / mainDays).toFixed(1);
+
+  // BIZ-04 (optional median for future use)
+  const sorted = [...perDayValues].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  const median = +(sorted.length % 2 !== 0
+    ? sorted[mid]
+    : (sorted[mid - 1] + sorted[mid]) / 2).toFixed(1);
+
+  return { mainDays, weightedAvg, median, perDayValues };
+}
+
 function renderCapa(){
   const st={};
   records.forEach(r=>{if(r.type!=='메인작업')return;const k=r.worker+'|'+r.taskName;if(!st[k])st[k]={worker:r.worker,taskName:r.taskName,total:0};st[k].total+=r.quantity});
