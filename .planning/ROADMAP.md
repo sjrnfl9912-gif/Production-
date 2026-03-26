@@ -79,7 +79,9 @@ Plans:
   2. 하루에 여러 품목을 작업한 날도 품목별 소요일 계산이 왜곡 없이 표시된다
   3. 데이터가 3일 미만일 때 소요일 수치 대신 "데이터 부족" 경고가 명확하게 표시된다
   4. 소요일 계산 공식이 단순 나누기가 아닌 가중 평균 또는 중앙값 기반으로 동작한다
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 04-01-PLAN.md — calcLeadTimeStats() 헬퍼 추가 + renderCapa()/renderLeadTime() 업데이트 (BIZ-01~04)
 
 ### Phase 5: PWA
 **Goal**: 카카오톡 외 브라우저 사용자는 앱을 홈 화면에 추가할 수 있고, 재방문 시 빠르게 로딩된다
@@ -101,7 +103,7 @@ Plans:
 | 1. Foundation | 3/3 | Complete   | 2026-03-25 |
 | 2. Touch UX | 2/3 | In Progress|  |
 | 3. UI Redesign | 2/3 | In Progress|  |
-| 4. Business Logic | 0/0 | Not started | - |
+| 4. Business Logic | 0/1 | Not started | - |
 | 5. PWA | 0/0 | Not started | - |
 
 ---
@@ -144,4 +146,4 @@ Plans:
 ---
 
 *Roadmap created: 2026-03-25*
-*Last updated: 2026-03-26 Phase 3 planned (3 plans)*
+*Last updated: 2026-03-26 Phase 4 planned (1 plan)*
